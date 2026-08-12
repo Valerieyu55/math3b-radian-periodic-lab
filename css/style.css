@@ -1,0 +1,347 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap");
+@import url("https://fontsapi.zeoseven.com/96/main/result.css");
+
+@font-face {
+  font-family: 'jf-openhuninn-1.1';
+  src: local('jf open 粉圓'), local('jf-openhuninn-1.1'), local('jf-openhuninn'),
+       url('https://cdn.jsdelivr.net/gh/justfont/open-huninn-font/font/jf-openhuninn-1.1.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'jf open 粉圓';
+  src: local('jf open 粉圓'), local('jf-openhuninn-1.1'), local('jf-openhuninn'),
+       url('https://cdn.jsdelivr.net/gh/justfont/open-huninn-font/font/jf-openhuninn-1.1.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ChenYuluoyan';
+  src: local('辰宇落雁體 Thin'), local('辰宇落雁體'), local('ChenYuluoyan-Thin'), local('ChenYuluoyan'),
+       url('https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@v2.0-open/ChenYuluoyan-Thin.ttf') format('truetype'),
+       url('https://cdn.jsdelivr.net/gh/justfont/open-huninn-font/font/jf-openhuninn-1.1.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── jf open 粉圓 × Nunito 複合字體系統 ── */
+.font-huninn,
+.font-openhuninn,
+.font-jf-openhuninn {
+  font-family: 'Nunito', 'jf open 粉圓', 'jf-openhuninn-1.1', 'Noto Sans TC', sans-serif !important;
+}
+
+.font-nunito {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+.font-chenyu,
+.font-title,
+.chenyu-title {
+  font-family: '辰宇落雁體 Thin', '辰宇落雁體', 'ChenYuluoyan', 'Nunito', 'jf-openhuninn-1.1', 'Noto Serif TC', cursive, sans-serif !important;
+  letter-spacing: 0.04em;
+}
+
+/* Elegant Title Styling */
+h1.font-chenyu,
+h2.font-chenyu,
+.hero-title,
+.tab-header-title {
+  font-family: '辰宇落雁體 Thin', '辰宇落雁體', 'ChenYuluoyan', 'Nunito', 'jf-openhuninn-1.1', 'Noto Serif TC', cursive, sans-serif !important;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+
+:root {
+  /* Valerie Yu Studio & 3-1 Geometry Morandi Color Palette */
+  --brand-primary: #2B3848;        /* 深沉雅致墨藍灰 / Deep Ink Slate */
+  --brand-primary-hover: #1E2834;
+  --brand-secondary: #C59B63;      /* 溫潤焦糖燕麥金 / Warm Caramel Linen */
+  --brand-secondary-light: #F7EFE3;
+  --brand-accent: #7A94A8;         /* 莫蘭迪霧面冰藍 / Morandi Slate Blue */
+  --brand-accent-light: #EBF2F7;
+  --brand-bg: #F5F1EA;             /* 典雅暖燕麥紙質底色 / Warm Oat Cream */
+  --brand-surface: linear-gradient(150deg, rgba(255, 255, 255, 0.90) 0%, rgba(247, 242, 233, 0.92) 100%);
+  --brand-border: #DFD5C4;
+
+  /* Semantic Palette */
+  --color-sage: #4E7869;           /* 尤加利鼠尾草綠 (Correct / Sector) */
+  --color-sage-light: #E8F2EC;
+  --color-sage-border: #C2D9CD;
+  --color-terracotta: #A15650;     /* 乾枯玫瑰陶土紅 (Wrong / Calculator) */
+  --color-terracotta-light: #F7EAE9;
+  --color-terracotta-border: #E8C8C6;
+  --color-caramel: #A37547;        /* 焦糖暖金 (Architecture / Accent) */
+  --color-caramel-light: #F7EDE1;
+  --color-caramel-border: #E6D2BC;
+  --color-lavender: #5E587A;       /* 薰衣草灰紫 (Misconception Quiz) */
+  --color-lavender-light: #EDEAF5;
+  --color-lavender-border: #D5CEE5;
+  --color-nordic: #4E7292;         /* 暮光北歐藍 (Definition) */
+  --color-nordic-light: #EBF2F7;
+  --color-nordic-border: #C8DBE8;
+  --color-amethyst: #664980;       /* 丁香深紫 (Practice Guided) */
+  --color-amethyst-light: #F1EAF7;
+  --color-amethyst-border: #DDCFE8;
+}
+
+body {
+  font-family: 'Nunito', 'jf open 粉圓', 'jf-openhuninn-1.1', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--brand-bg);
+  background-image: 
+    radial-gradient(rgba(43, 56, 72, 0.08) 1.2px, transparent 1.2px),
+    linear-gradient(180deg, #F8F5EE 0%, #F1ECE2 100%);
+  background-size: 24px 24px, 100% 100%;
+  background-attachment: fixed;
+  color: var(--brand-primary);
+  min-height: 100vh;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Ambient Studio Floating Blobs */
+.bg-decorations {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.blob-1 {
+  position: absolute;
+  top: -8%;
+  right: 2%;
+  width: 580px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197, 155, 99, 0.22) 0%, rgba(245, 241, 234, 0) 70%);
+  filter: blur(70px);
+  animation: floatSlow 16s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  position: absolute;
+  bottom: 5%;
+  left: -6%;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(78, 114, 146, 0.18) 0%, rgba(245, 241, 234, 0) 70%);
+  filter: blur(80px);
+  animation: floatSlow2 18s ease-in-out infinite alternate;
+}
+
+.blob-3 {
+  position: absolute;
+  top: 40%;
+  right: 20%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94, 88, 122, 0.14) 0%, rgba(245, 241, 234, 0) 70%);
+  filter: blur(65px);
+  animation: floatSlow 20s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes floatSlow {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(25px, 20px) scale(1.05); }
+  100% { transform: translate(-20px, 35px) scale(0.96); }
+}
+
+@keyframes floatSlow2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-30px, -20px) scale(1.06); }
+  100% { transform: translate(25px, -35px) scale(0.95); }
+}
+
+h1, h2, h3, h4, h5, .font-serif {
+  font-family: 'Nunito', 'jf open 粉圓', 'jf-openhuninn-1.1', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Master Textbook Card with Warm Silky Finish */
+.textbook-card {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 244, 236, 0.92) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(212, 195, 171, 0.55);
+  box-shadow: 
+    0 18px 38px -10px rgba(43, 56, 72, 0.08), 
+    0 4px 14px -2px rgba(43, 56, 72, 0.04), 
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  border-radius: 24px !important;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.textbook-card:hover {
+  border-color: rgba(197, 155, 99, 0.65);
+  box-shadow: 
+    0 22px 45px -10px rgba(43, 56, 72, 0.10), 
+    0 6px 18px -2px rgba(43, 56, 72, 0.05), 
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+/* Studio Canvas Stage Workbench */
+.canvas-stage-card {
+  background: linear-gradient(135deg, #FAF8F4 0%, #F1EAE0 100%);
+  border: 1.5px solid rgba(212, 195, 171, 0.65);
+  border-radius: 20px;
+  box-shadow: 
+    inset 0 2px 8px rgba(43, 56, 72, 0.05), 
+    0 6px 18px -4px rgba(43, 56, 72, 0.04);
+}
+
+/* Warm Control Box */
+.control-box-card {
+  background: linear-gradient(145deg, #FCFBF8 0%, #F3EDE2 100%);
+  border: 1.5px solid #DDD3C2;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px -2px rgba(43, 56, 72, 0.04);
+}
+
+.concept-box {
+  background: linear-gradient(135deg, #EBF2F7 0%, #DFEAF2 100%);
+  border-left: 4.5px solid var(--brand-accent);
+  border-top: 1px solid #D1E1EC;
+  border-right: 1px solid #D1E1EC;
+  border-bottom: 1px solid #D1E1EC;
+  border-radius: 1rem;
+}
+
+.concept-box p, .concept-box ul, .concept-box li {
+  color: var(--brand-primary);
+}
+
+.example-box {
+  border: 1.5px dashed rgba(197, 155, 99, 0.7);
+  background: linear-gradient(135deg, #FAF4EB 0%, #F1E6D4 100%);
+  border-radius: 1rem;
+}
+
+.math-text {
+  font-family: 'KaTeX_Math', 'Times New Roman', serif;
+  font-style: italic;
+  color: var(--brand-primary);
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fade-in, .animate-fade-in {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+/* Range input styled with luxury ink slate & oat gold */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: #DFD6C7;
+  border-radius: 10px;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(43, 56, 72, 0.15);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: #2B3848;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(43, 56, 72, 0.30);
+  border: 3px solid #FAF6F0;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  background: #1E2834;
+}
+
+.progress-bar {
+  height: 7px;
+  background: linear-gradient(90deg, #C59B63 0%, #7A94A8 50%, #2B3848 100%);
+  border-radius: 9999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--brand-bg); }
+::-webkit-scrollbar-thumb { background: #C59B63; border-radius: 99px; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Calculator UI styling */
+.calc-container-pro {
+  background: #232D3B;
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 20px 45px -12px rgba(27, 36, 48, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 2px solid #3E4D5E;
+  width: 100%;
+  max-width: 380px;
+}
+
+.calc-screen-pro {
+  background: #0E1724;
+  border: 2px solid #2F3D4E;
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #38BDF8;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  margin-bottom: 16px;
+  text-align: right;
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.calc-btn-pro {
+  font-family: 'jf-openhuninn-1.1', 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 12px 6px;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  user-select: none;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+}
+
