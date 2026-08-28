@@ -235,6 +235,7 @@
     const DefinitionTab = () => {
       const [theta, setTheta] = useState(1.0); // in radians
       const [unrollPercent, setUnrollPercent] = useState(0); // 0 to 100
+      const [activeModalConcept, setActiveModalConcept] = useState(null); // 'def', 'misconception', 'reason1', 'reason2', 'reason3'
       const canvasRef = useRef(null);
       const w = 680, h = 380;
       useRetinaCanvas(canvasRef, w, h);
@@ -533,24 +534,38 @@
               </div>
             </div>
 
-            {/* Formula & Concept Callouts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="concept-box p-5 bg-gradient-to-br from-nordic-light to-[#E1ECF4] border-nordic shadow-xs">
-                <h4 className="font-black text-nordic-dark text-sm mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-lightbulb text-nordic"></i>
-                  什麼是 1 弳 (1 Radian)？
-                </h4>
+            {/* Formula & Concept Callouts with Hover Zoom & Click Expand */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div 
+                onClick={() => setActiveModalConcept('def')}
+                className="group concept-box p-5 bg-gradient-to-br from-nordic-light to-[#E1ECF4] border border-nordic/40 rounded-2xl shadow-xs cursor-pointer transition-all duration-300 transform hover:scale-[1.03] hover:-translate-y-1 hover:shadow-xl hover:ring-2 hover:ring-nordic/50">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-black text-nordic-dark text-sm flex items-center gap-2">
+                    <i className="fa-solid fa-lightbulb text-nordic"></i>
+                    什麼是 1 弳 (1 Radian)？
+                  </h4>
+                  <span className="text-[10px] font-black bg-white/90 text-nordic-dark px-2 py-0.5 rounded-full border border-nordic-border opacity-70 group-hover:opacity-100 transition-opacity">
+                    點擊看放大詳解 🔍
+                  </span>
+                </div>
                 <p className="text-xs text-slate-700 font-bold leading-relaxed">
                   在半徑為 <MathInline math="r" /> 的圓中，<strong>長度剛好等於半徑 <MathInline math="r" /> 的圓弧</strong> 所對的圓心角，就定義為 <strong>1 弳 (1 rad)</strong>。<br />
                   換算為度數：<MathInline math="1\text{ rad} = \left(\frac{180}{\pi}\right)^\circ \approx 57.3^\circ" />。
                 </p>
               </div>
 
-              <div className="example-box p-5 border-caramel/40 bg-gradient-to-br from-caramel-light to-[#F2E5D3] shadow-xs">
-                <h4 className="font-black text-caramel-dark text-sm mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-triangle-exclamation text-caramel"></i>
-                  教師叮嚀：常見迷思澄清
-                </h4>
+              <div 
+                onClick={() => setActiveModalConcept('misconception')}
+                className="group example-box p-5 border border-caramel/40 bg-gradient-to-br from-caramel-light to-[#F2E5D3] rounded-2xl shadow-xs cursor-pointer transition-all duration-300 transform hover:scale-[1.03] hover:-translate-y-1 hover:shadow-xl hover:ring-2 hover:ring-caramel/50">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-black text-caramel-dark text-sm flex items-center gap-2">
+                    <i className="fa-solid fa-triangle-exclamation text-caramel"></i>
+                    教師叮嚀：常見迷思澄清
+                  </h4>
+                  <span className="text-[10px] font-black bg-white/90 text-caramel-dark px-2 py-0.5 rounded-full border border-caramel-border opacity-70 group-hover:opacity-100 transition-opacity">
+                    點擊看放大詳解 🔍
+                  </span>
+                </div>
                 <p className="text-xs text-slate-700 font-bold leading-relaxed">
                   學生常寫「<MathInline math="\pi = 180" />」，這是嚴重的單位混淆！<br />
                   <strong className="text-terracotta font-black">正確寫法：</strong><MathInline math="\pi\text{ 弳} = 180^\circ" />。<br />
@@ -558,6 +573,342 @@
                 </p>
               </div>
             </div>
+
+            {/* Pedagogical Insight: Why Learn Radians in Grade 11 Math? (With Hover Zoom & Click Expand) */}
+            <div className="bg-gradient-to-br from-[#FAF8F5] via-[#F3EFE6] to-[#E9E2D5] border border-[#DDD3C2] rounded-2xl p-6 md:p-8 shadow-xs">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 mb-6 border-b border-[#D4C8B4]/60">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-nordic text-white rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">
+                    <i className="fa-solid fa-circle-question"></i>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black bg-nordic-light text-nordic-dark border border-nordic-border px-3 py-0.5 rounded-full uppercase tracking-widest block mb-1">
+                      PEDAGOGICAL INSIGHT · 高二數學關鍵思考
+                    </span>
+                    <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 tracking-wide">
+                      為什麼高二數學要學「弧度量」？
+                    </h3>
+                  </div>
+                </div>
+                <span className="text-xs font-black text-[#546B84] bg-white/80 border border-[#CBD2DB] px-3.5 py-1.5 rounded-xl shadow-xs">
+                  打破度數限制 · 邁向連續函數與微積分
+                </span>
+              </div>
+
+              <p className="text-xs md:text-sm text-slate-700 font-bold leading-relaxed mb-6 bg-white/80 p-4 rounded-xl border border-[#DDD3C2] shadow-xs">
+                國中與高一我們一直使用「度數（°）」量度角度，為什麼到了高二 3B 必須引進「弧度（弳度 rad）」？難道只是換一種單位嗎？<br />
+                <strong className="text-nordic-dark font-black">核心解答：弧度量是打破「幾何角度」與「代數實數」藩籬的最關鍵橋樑！ (滑桿游標懸停移入可放大區塊，點擊開啟深度解析視窗)</strong>
+              </p>
+
+              {/* 3 Interactive Zoomable Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Reason 1 Block */}
+                <div 
+                  onClick={() => setActiveModalConcept('reason1')}
+                  className="group bg-white p-5 rounded-2xl border border-nordic-border shadow-xs flex flex-col justify-between cursor-pointer transition-all duration-300 transform hover:scale-[1.04] hover:-translate-y-1.5 hover:shadow-2xl hover:ring-2 hover:ring-nordic/50">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 bg-nordic-light text-nordic-dark font-black rounded-lg text-xs flex items-center justify-center border border-nordic-border group-hover:bg-nordic group-hover:text-white transition-colors">01</span>
+                        <h4 className="font-black text-slate-800 text-sm group-hover:text-nordic-dark transition-colors">突破單位限制 · 角度實數化</h4>
+                      </div>
+                      <span className="text-[10px] font-black text-nordic opacity-60 group-hover:opacity-100 transition-opacity">
+                        <i className="fa-solid fa-expand"></i> 放大
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-bold leading-relaxed mb-3">
+                      度數（°）是歷史規定的人為單位，無法直接當作連續函數 <MathInline math="f(x)" /> 的自變數 <MathInline math="x" />；弧度定義為 <MathInline math="\theta = \frac{s}{r}" />（弧長/半徑），屬於<strong className="text-nordic-dark font-black">無因次純實數 (Real Number)</strong>。
+                    </p>
+                  </div>
+                  <div className="bg-nordic-light/70 p-2.5 rounded-lg border border-nordic-border/60 text-[11px] text-slate-700 font-black group-hover:bg-nordic-light transition-colors">
+                    💡 讓三角函數 <MathInline math="y = \sin x" /> 的自變數 <MathInline math="x" /> 能畫在實數軸 <MathInline math="\mathbb{R}" /> 上！
+                  </div>
+                </div>
+
+                {/* Reason 2 Block */}
+                <div 
+                  onClick={() => setActiveModalConcept('reason2')}
+                  className="group bg-white p-5 rounded-2xl border border-sage-border shadow-xs flex flex-col justify-between cursor-pointer transition-all duration-300 transform hover:scale-[1.04] hover:-translate-y-1.5 hover:shadow-2xl hover:ring-2 hover:ring-sage/50">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 bg-sage-light text-sage-dark font-black rounded-lg text-xs flex items-center justify-center border border-sage-border group-hover:bg-sage group-hover:text-white transition-colors">02</span>
+                        <h4 className="font-black text-slate-800 text-sm group-hover:text-sage-dark transition-colors">簡化公式與高三微積分基石</h4>
+                      </div>
+                      <span className="text-[10px] font-black text-sage opacity-60 group-hover:opacity-100 transition-opacity">
+                        <i className="fa-solid fa-expand"></i> 放大
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-bold leading-relaxed mb-3">
+                      弧長公式 <MathInline math="s = r\theta" /> 與扇形面積 <MathInline math="A = \frac{1}{2}r^2\theta" /> 省去繁瑣的 <MathInline math="\frac{\theta}{360^\circ}" />。
+                      更重要的是在弧度下才有重要極限 <MathInline math="\lim_{\theta \to 0}\frac{\sin\theta}{\theta} = 1" />。
+                    </p>
+                  </div>
+                  <div className="bg-sage-light/70 p-2.5 rounded-lg border border-sage-border/60 text-[11px] text-slate-700 font-black group-hover:bg-sage-light transition-colors">
+                    💡 導出極致簡潔的微分公式 <MathInline math="(\sin x)' = \cos x" />（不必多乘 <MathInline math="\frac{\pi}{180}" /> 係數）。
+                  </div>
+                </div>
+
+                {/* Reason 3 Block */}
+                <div 
+                  onClick={() => setActiveModalConcept('reason3')}
+                  className="group bg-white p-5 rounded-2xl border border-caramel-border shadow-xs flex flex-col justify-between cursor-pointer transition-all duration-300 transform hover:scale-[1.04] hover:-translate-y-1.5 hover:shadow-2xl hover:ring-2 hover:ring-caramel/50">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 bg-caramel-light text-caramel-dark font-black rounded-lg text-xs flex items-center justify-center border border-caramel-border group-hover:bg-caramel group-hover:text-white transition-colors">03</span>
+                        <h4 className="font-black text-slate-800 text-sm group-hover:text-caramel-dark transition-colors">對接物理世界與週期性建模</h4>
+                      </div>
+                      <span className="text-[10px] font-black text-caramel opacity-60 group-hover:opacity-100 transition-opacity">
+                        <i className="fa-solid fa-expand"></i> 放大
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-bold leading-relaxed mb-3">
+                      物理學中圓周運動角速度 <MathInline math="\omega" /> (rad/s) 與線速度 <MathInline math="v = r\omega" /> 必須用弧度；
+                      摩天輪、潮汐與聲波的時間 <MathInline math="t" /> 建模 <MathInline math="y = A\sin(\omega t + \phi)" /> 也依賴弧度。
+                    </p>
+                  </div>
+                  <div className="bg-caramel-light/70 p-2.5 rounded-lg border border-caramel-border/60 text-[11px] text-slate-700 font-black group-hover:bg-caramel-light transition-colors">
+                    💡 完美銜接單元 02 的「週期性數學模型」真實生活情境！
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Enlarged Pop-out Modal Overlay with Large Text & Next/Prev Navigation */}
+            {activeModalConcept && (() => {
+              const conceptSequence = ['def', 'misconception', 'reason1', 'reason2', 'reason3'];
+              const currIdx = conceptSequence.indexOf(activeModalConcept);
+              const prevConcept = currIdx > 0 ? conceptSequence[currIdx - 1] : null;
+              const nextConcept = currIdx < conceptSequence.length - 1 ? conceptSequence[currIdx + 1] : null;
+
+              return (
+                <div 
+                  onClick={() => setActiveModalConcept(null)}
+                  className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 md:p-6 animate-fade-in">
+                  <div 
+                    onClick={e => e.stopPropagation()}
+                    className="bg-white rounded-3xl max-w-3xl w-full p-6 md:p-10 shadow-2xl border border-slate-200 animate-scale-up relative overflow-hidden flex flex-col max-h-[90vh]">
+                    
+                    {/* Modal Close Button */}
+                    <button 
+                      onClick={() => setActiveModalConcept(null)}
+                      className="absolute top-5 right-5 w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-full flex items-center justify-center transition-colors z-10 shadow-xs">
+                      <i className="fa-solid fa-xmark text-xl"></i>
+                    </button>
+
+                    {/* Scrollable Content Container */}
+                    <div className="overflow-y-auto pr-1 space-y-6 flex-1">
+
+                      {/* Reason 1 Expanded View */}
+                      {activeModalConcept === 'reason1' && (
+                        <div className="space-y-6">
+                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
+                            <span className="w-12 h-12 bg-nordic text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">01</span>
+                            <div>
+                              <span className="text-xs font-black text-nordic uppercase tracking-widest block mb-1">MATHEMATICAL REAL NUMBERS</span>
+                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">突破單位限制 · 角度實數化 (Real-Valued Angle)</h3>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-nordic-light/80 p-6 rounded-2xl border border-nordic-border space-y-3">
+                            <h4 className="font-black text-nordic-dark text-base md:text-lg flex items-center gap-2">
+                              <i className="fa-solid fa-scale-balanced text-xl"></i> 為什麼「度數（°）」無法直接做高等代數運算？
+                            </h4>
+                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                              度數（°）是古巴比倫歷史規定的人為單位（將圓等分 360 份），它並非連續實數。如果我們想繪製 <MathInline math="f(x) = \sin x" /> 的函數圖形，<MathInline math="x" /> 軸代表的必須是連續數線上無因次的「純實數（Real Numbers）」。
+                            </p>
+                          </div>
+
+                          <div className="bg-[#FAF7F2] p-6 rounded-2xl border border-[#DDD3C2] space-y-4">
+                            <h4 className="font-black text-slate-800 text-base md:text-lg flex items-center gap-2">
+                              <i className="fa-solid fa-circle-check text-nordic text-xl"></i> 弧度（Radian）的物理無因次定義
+                            </h4>
+                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                              圓心角定義為 <MathInline math="\theta = \frac{s}{r}" />（弧長除以半徑）。因為弧長 <MathInline math="s" /> 與半徑 <MathInline math="r" /> 單位都是長度（例如公分），兩者相除後「長度單位相互抵銷」，使 1 rad 成為一個純粹的無因次實數（<MathInline math="\approx 57.3^\circ" />）。
+                            </p>
+                            <div className="p-4 bg-white rounded-2xl border border-[#CBD2DB] text-center font-serif text-nordic-dark font-black text-lg md:text-xl shadow-xs">
+                              <MathInline math="1\text{ rad} = \frac{1\text{ 公分弧長}}{1\text{ 公分半徑}} = 1 \quad \text{(純實數定義)}" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Reason 2 Expanded View */}
+                      {activeModalConcept === 'reason2' && (
+                        <div className="space-y-6">
+                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
+                            <span className="w-12 h-12 bg-sage text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">02</span>
+                            <div>
+                              <span className="text-xs font-black text-sage uppercase tracking-widest block mb-1">CALCULUS FOUNDATION</span>
+                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">簡化公式與高三微積分基石 (Calculus Base)</h3>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div className="bg-rose-50/80 p-5 rounded-2xl border border-rose-200 space-y-3">
+                              <span className="text-xs font-black text-rose-600 uppercase tracking-wider block">度數制 (Degree Mode - 繁瑣)</span>
+                              <div className="text-sm md:text-base font-bold text-slate-700 space-y-2">
+                                <div>弧長：<MathInline math="s = 2\pi r \cdot \frac{\theta^\circ}{360^\circ}" /></div>
+                                <div>面積：<MathInline math="A = \pi r^2 \cdot \frac{\theta^\circ}{360^\circ}" /></div>
+                              </div>
+                            </div>
+                            <div className="bg-sage-light p-5 rounded-2xl border border-sage-border space-y-3">
+                              <span className="text-xs font-black text-sage-dark uppercase tracking-wider block">弧度制 (Radian Mode - 極致簡潔)</span>
+                              <div className="text-sm md:text-base font-bold text-slate-800 space-y-2">
+                                <div>弧長：<MathInline math="s = r\theta" /></div>
+                                <div>面積：<MathInline math="A = \frac{1}{2}r^2\theta" /></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-[#FAF7F2] p-6 rounded-2xl border border-[#DDD3C2] space-y-4">
+                            <h4 className="font-black text-slate-800 text-base md:text-lg flex items-center gap-2">
+                              <i className="fa-solid fa-square-root-variable text-sage text-xl"></i> 高三極限與微分公式的完美契合
+                            </h4>
+                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                              只有在弧度制下，微積分中極具關鍵的極限才成立：<MathInline math="\lim_{\theta \to 0}\frac{\sin\theta}{\theta} = 1" />。<br />
+                              這導出了無可替代的簡潔微分公式：<MathInline math="(\sin x)' = \cos x" />。若用度數制，每一次微分都會多出一個繁瑣的轉換因子 <MathInline math="\frac{\pi}{180}" />！
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Reason 3 Expanded View */}
+                      {activeModalConcept === 'reason3' && (
+                        <div className="space-y-6">
+                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
+                            <span className="w-12 h-12 bg-caramel text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">03</span>
+                            <div>
+                              <span className="text-xs font-black text-caramel uppercase tracking-widest block mb-1">PHYSICS & PERIODIC MODELING</span>
+                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">對接物理世界與週期性建模 (Periodic Models)</h3>
+                            </div>
+                          </div>
+
+                          <div className="bg-[#FAF7F2] p-6 rounded-2xl border border-[#DDD3C2] space-y-3">
+                            <h4 className="font-black text-caramel-dark text-base md:text-lg flex items-center gap-2">
+                              <i className="fa-solid fa-arrows-spin text-caramel text-xl"></i> 物理圓周運動與角速度 <MathInline math="\omega" />
+                            </h4>
+                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                              物理學中描述轉動時，角速度單位為 <MathInline math="\omega\text{ (rad/s)}" />。物體的切向線速度為 <MathInline math="v = r\cdot\omega" />。若用度數算角速度，算出的速度單位將無法直接轉換為 m/s！
+                            </p>
+                          </div>
+
+                          <div className="bg-caramel-light/80 p-6 rounded-2xl border border-caramel-border space-y-4">
+                            <h4 className="font-black text-slate-800 text-base md:text-lg flex items-center gap-2">
+                              <i className="fa-solid fa-water text-caramel text-xl"></i> 單元 02 週期性數學模型（摩天輪與潮汐）
+                            </h4>
+                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                              現實世界中的時間 <MathInline math="t" />（秒/小時）是連續實數。建立了弧度概念後，我們才能將時間帶入三角函數模型：
+                            </p>
+                            <div className="p-4 bg-white rounded-2xl border border-caramel-border text-center font-serif text-caramel-dark font-black text-lg md:text-xl shadow-xs">
+                              <MathInline math="y = A \sin\left(\omega t + \phi\right) + k" />
+                            </div>
+                            <p className="text-sm text-slate-600 font-bold">
+                              這完美解釋了摩天輪高低起伏、海水漲退潮水深與聲波的頻率變化！
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Definition / Misconception Modal */}
+                      {(activeModalConcept === 'def' || activeModalConcept === 'misconception') && (
+                        <div className="space-y-6">
+                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
+                            <span className="w-12 h-12 bg-nordic text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">
+                              <i className={`fa-solid ${activeModalConcept === 'def' ? 'fa-lightbulb' : 'fa-triangle-exclamation'}`}></i>
+                            </span>
+                            <div>
+                              <span className="text-xs font-black text-nordic uppercase tracking-widest block mb-1">CORE RADIAN CONCEPT</span>
+                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">
+                                {activeModalConcept === 'def' ? '什麼是 1 弳 (1 Radian)？' : '教師叮嚀：常見迷思澄清'}
+                              </h3>
+                            </div>
+                          </div>
+
+                          <div className="bg-[#FAF7F2] p-6 md:p-8 rounded-2xl border border-[#DDD3C2] space-y-5">
+                            {activeModalConcept === 'def' ? (
+                              <>
+                                <p className="text-base md:text-lg text-slate-800 font-bold leading-relaxed">
+                                  在半徑為 <MathInline math="r" /> 的圓中，當圓弧長度 <MathInline math="s" /> 剛好等於半徑 <MathInline math="r" /> 時，該圓弧所對應的圓心角就被定義為 <strong>1 弳 (1 rad)</strong>。
+                                </p>
+                                <div className="p-5 bg-white rounded-2xl border border-[#CBD2DB] text-center font-serif text-slate-800 font-black text-xl md:text-2xl shadow-xs">
+                                  <MathInline math="1\text{ rad} = \left(\frac{180}{\pi}\right)^\circ \approx 57.3^\circ" />
+                                </div>
+                                <p className="text-sm text-slate-600 font-bold">
+                                  圓周長為 <MathInline math="2\pi r" />，因此一整圈（360°）對應的圓心角就是 <MathInline math="2\pi\text{ rad}" />。
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-base md:text-lg text-slate-800 font-bold leading-relaxed">
+                                  學生在剛接觸弧度時，最常犯的錯誤是直接寫出「<MathInline math="\pi = 180" />」，這是嚴重的單位混淆！
+                                </p>
+                                <div className="p-5 bg-rose-50 rounded-2xl border border-rose-200 text-center font-serif text-terracotta font-black text-base md:text-lg shadow-xs space-y-2">
+                                  <div>❌ 錯誤寫法：<MathInline math="\pi = 180" /> （因為 <MathInline math="\pi \approx 3.14 \neq 180" />）</div>
+                                  <div>✅ 正確寫法：<MathInline math="\pi\text{ 弳} = 180^\circ" /> （帶有單位等價關係）</div>
+                                </div>
+                                <p className="text-sm text-slate-600 font-bold">
+                                  <MathInline math="\pi" /> 本身是一個無理數常數（約 3.14159），只有加上「弳度（rad）」後，才代表半圓對應的角度 180°！
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Modal Bottom Navigation Controls (Next / Prev Step) */}
+                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                      {/* Prev Button */}
+                      <button 
+                        disabled={!prevConcept}
+                        onClick={() => prevConcept && setActiveModalConcept(prevConcept)}
+                        className={`px-5 py-2.5 rounded-xl font-black text-xs md:text-sm flex items-center gap-2 transition-all ${
+                          prevConcept 
+                            ? 'bg-[#FAF7F2] hover:bg-[#EFE8DC] text-slate-700 border border-[#DDD3C2] shadow-xs cursor-pointer' 
+                            : 'bg-slate-100 text-slate-300 border border-slate-200 cursor-not-allowed'
+                        }`}>
+                        <i className="fa-solid fa-chevron-left"></i> 上一步
+                      </button>
+
+                      {/* Concept Step Indicator */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black text-slate-500 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200 hidden sm:inline-block">
+                          觀念 {currIdx + 1} / {conceptSequence.length}
+                        </span>
+                        <div className="flex gap-1.5">
+                          {conceptSequence.map((c, idx) => (
+                            <span 
+                              key={c} 
+                              onClick={() => setActiveModalConcept(c)}
+                              className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
+                                idx === currIdx ? 'bg-nordic w-6' : 'bg-slate-200 hover:bg-slate-300'
+                              }`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Next / Finish Button */}
+                      {nextConcept ? (
+                        <button 
+                          onClick={() => setActiveModalConcept(nextConcept)}
+                          className="px-5 py-2.5 bg-nordic hover:bg-nordic-dark text-white font-black text-xs md:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
+                          下一步 <i className="fa-solid fa-chevron-right"></i>
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => setActiveModalConcept(null)}
+                          className="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-black text-xs md:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
+                          完成閱讀 <i className="fa-solid fa-check"></i>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       );
@@ -3921,7 +4272,14 @@
               <div className="text-[10px] font-black bg-nordic text-white px-2.5 py-0.5 rounded-full inline-block mb-2 uppercase tracking-widest">
                 UNIT 01 · 核心幾何
               </div>
-              <h3 className="text-2xl font-bold font-chenyu text-slate-800 mb-2">單元 01：弧度量</h3>
+              <div className="flex items-center gap-3 mb-2 flex-wrap">
+                <h3 className="text-2xl font-bold font-chenyu text-slate-800">單元 01：弧度量</h3>
+                <button 
+                  onClick={() => setActiveTab('definition')} 
+                  className="px-3 py-1 bg-nordic-light hover:bg-[#D8E6F0] border border-nordic-border text-nordic-dark text-xs font-black rounded-xl shadow-xs flex items-center gap-1.5 transition-all transform hover:scale-105 cursor-pointer">
+                  <i className="fa-solid fa-circle-question text-nordic"></i> 為什麼要學弧度量？
+                </button>
+              </div>
               <p className="text-slate-600 text-xs font-bold leading-relaxed mb-4">
                 從弧長拉直理解 1 弳實數定義、探索象限螺旋角、精通扇形公式與古希臘埃拉托斯特尼測量地球半徑。
               </p>
