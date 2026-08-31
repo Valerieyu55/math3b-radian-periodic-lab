@@ -3020,6 +3020,35 @@
       const maxVal = (k + Math.abs(a)).toFixed(1);
       const minVal = (k - Math.abs(a)).toFixed(1);
 
+      const dynamicModel = useMemo(() => {
+        let str = 'y = ';
+        if (a === -1) str += '-';
+        else if (a !== 1) str += a;
+        
+        str += '\\sin(';
+        
+        if (b === -1) str += '-';
+        else if (b !== 1) str += b;
+
+        if (h !== 0) {
+          const hVal = parseFloat(Math.abs(h).toFixed(2));
+          if (b !== 1 && b !== -1) {
+             str += `(x ${h > 0 ? '-' : '+'} ${hVal})`;
+          } else {
+             str += `x ${h > 0 ? '-' : '+'} ${hVal}`;
+          }
+        } else {
+          str += 'x';
+        }
+        
+        str += ')';
+        
+        if (k !== 0) {
+          str += k > 0 ? ` + ${k}` : ` - ${Math.abs(k)}`;
+        }
+        return str;
+      }, [a, b, h, k]);
+
       return (
         <div className="space-y-6 animate-slide-up pb-10">
           <div className="textbook-card p-6 md:p-8 rounded-2xl">
@@ -3036,11 +3065,19 @@
                   即時調整振幅 <MathInline math="a" />、頻率 <MathInline math="b" />、水平相位 <MathInline math="h" /> 與鉛直平移 <MathInline math="k" />，直觀理解週期函數的一般式。
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-lavender-light to-[#E8DFEF] border border-lavender-border px-5 py-3 rounded-2xl text-center shadow-xs">
-                <span className="text-[10px] font-black text-lavender uppercase tracking-widest block mb-1">GENERAL MODEL</span>
-                <span className="text-xl font-black text-lavender-dark font-serif flex items-center justify-center">
-                  <MathInline math="y = a\sin(b(x - h)) + k" />
-                </span>
+              <div className="bg-gradient-to-br from-lavender-light to-[#E8DFEF] border border-lavender-border px-5 py-3 rounded-2xl text-center shadow-xs flex flex-col gap-2">
+                <div>
+                  <span className="text-[10px] font-black text-lavender uppercase tracking-widest block mb-0.5">GENERAL MODEL (一般式)</span>
+                  <span className="text-base font-extrabold text-slate-600 font-serif flex items-center justify-center">
+                    <MathInline math="y = a\sin(b(x - h)) + k" />
+                  </span>
+                </div>
+                <div className="pt-2 border-t border-lavender-border/60">
+                  <span className="text-[10px] font-black text-amethyst uppercase tracking-widest block mb-0.5">CURRENT MODEL (實時帶入)</span>
+                  <span className="text-lg font-black text-amethyst-dark font-serif flex items-center justify-center min-w-[210px]">
+                    <MathInline math={dynamicModel} />
+                  </span>
+                </div>
               </div>
             </div>
 
