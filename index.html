@@ -685,49 +685,49 @@
               return (
                 <div 
                   onClick={() => setActiveModalConcept(null)}
-                  className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 md:p-6 animate-fade-in">
+                  className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in overflow-hidden">
                   <div 
                     onClick={e => e.stopPropagation()}
-                    className="bg-white rounded-3xl max-w-3xl w-full p-6 md:p-10 shadow-2xl border border-slate-200 animate-scale-up relative overflow-hidden flex flex-col max-h-[90vh]">
+                    className="bg-white rounded-3xl max-w-2xl md:max-w-3xl w-full p-5 md:p-7 shadow-2xl border border-slate-200 animate-scale-up relative overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[88vh] my-auto">
                     
                     {/* Modal Close Button */}
                     <button 
                       onClick={() => setActiveModalConcept(null)}
-                      className="absolute top-5 right-5 w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-full flex items-center justify-center transition-colors z-10 shadow-xs">
-                      <i className="fa-solid fa-xmark text-xl"></i>
+                      className="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 sm:w-10 sm:h-10 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-full flex items-center justify-center transition-colors z-20 shadow-xs cursor-pointer">
+                      <i className="fa-solid fa-xmark text-lg sm:text-xl"></i>
                     </button>
 
                     {/* Scrollable Content Container */}
-                    <div className="overflow-y-auto pr-1 space-y-6 flex-1">
+                    <div className="overflow-y-auto pr-2 space-y-4 sm:space-y-5 flex-1 min-h-0 no-scrollbar">
 
                       {/* Reason 1 Expanded View */}
                       {activeModalConcept === 'reason1' && (
-                        <div className="space-y-6">
-                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-                            <span className="w-12 h-12 bg-nordic text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">01</span>
+                        <div className="space-y-4 sm:space-y-5">
+                          <div className="flex items-center gap-3 sm:gap-4 border-b border-slate-100 pb-3 sm:pb-4 pr-10">
+                            <span className="w-10 h-10 sm:w-12 sm:h-12 bg-nordic text-white font-black rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-sm shrink-0">01</span>
                             <div>
-                              <span className="text-xs font-black text-nordic uppercase tracking-widest block mb-1">MATHEMATICAL REAL NUMBERS</span>
-                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">突破單位限制 · 角度實數化 (Real-Valued Angle)</h3>
+                              <span className="text-[10px] sm:text-xs font-black text-nordic uppercase tracking-widest block mb-0.5">MATHEMATICAL REAL NUMBERS</span>
+                              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">突破單位限制 · 角度實數化 (Real-Valued Angle)</h3>
                             </div>
                           </div>
                           
-                          <div className="bg-nordic-light/80 p-6 rounded-2xl border border-nordic-border space-y-3">
-                            <h4 className="font-black text-nordic-dark text-base md:text-lg flex items-center gap-2">
-                              <i className="fa-solid fa-scale-balanced text-xl"></i> 為什麼「度數（°）」無法直接做高等代數運算？
+                          <div className="bg-nordic-light/80 p-4 sm:p-5 rounded-2xl border border-nordic-border space-y-2">
+                            <h4 className="font-black text-nordic-dark text-sm sm:text-base flex items-center gap-2">
+                              <i className="fa-solid fa-scale-balanced text-base sm:text-lg"></i> 為什麼「度數（°）」無法直接做高等代數運算？
                             </h4>
-                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-bold">
                               度數（°）是古巴比倫歷史規定的人為單位（將圓等分 360 份），它並非連續實數。如果我們想繪製 <MathInline math="f(x) = \sin x" /> 的函數圖形，<MathInline math="x" /> 軸代表的必須是連續數線上無因次的「純實數（Real Numbers）」。
                             </p>
                           </div>
 
-                          <div className="bg-[#FAF7F2] p-6 rounded-2xl border border-[#DDD3C2] space-y-4">
-                            <h4 className="font-black text-slate-800 text-base md:text-lg flex items-center gap-2">
-                              <i className="fa-solid fa-circle-check text-nordic text-xl"></i> 弧度（Radian）的物理無因次定義
+                          <div className="bg-[#FAF7F2] p-4 sm:p-5 rounded-2xl border border-[#DDD3C2] space-y-3">
+                            <h4 className="font-black text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                              <i className="fa-solid fa-circle-check text-nordic text-base sm:text-lg"></i> 弧度（Radian）的物理無因次定義
                             </h4>
-                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-bold">
                               圓心角定義為 <MathInline math="\theta = \frac{s}{r}" />（弧長除以半徑）。因為弧長 <MathInline math="s" /> 與半徑 <MathInline math="r" /> 單位都是長度（例如公分），兩者相除後「長度單位相互抵銷」，使 1 rad 成為一個純粹的無因次實數（<MathInline math="\approx 57.3^\circ" />）。
                             </p>
-                            <div className="p-4 bg-white rounded-2xl border border-[#CBD2DB] text-center font-serif text-nordic-dark font-black text-lg md:text-xl shadow-xs">
+                            <div className="p-3.5 bg-white rounded-2xl border border-[#CBD2DB] text-center font-serif text-nordic-dark font-black text-base sm:text-lg shadow-xs">
                               <MathInline math="1\text{ rad} = \frac{1\text{ 公分弧長}}{1\text{ 公分半徑}} = 1 \quad \text{(純實數定義)}" />
                             </div>
                           </div>
@@ -736,37 +736,37 @@
 
                       {/* Reason 2 Expanded View */}
                       {activeModalConcept === 'reason2' && (
-                        <div className="space-y-6">
-                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-                            <span className="w-12 h-12 bg-sage text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">02</span>
+                        <div className="space-y-4 sm:space-y-5">
+                          <div className="flex items-center gap-3 sm:gap-4 border-b border-slate-100 pb-3 sm:pb-4 pr-10">
+                            <span className="w-10 h-10 sm:w-12 sm:h-12 bg-sage text-white font-black rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-sm shrink-0">02</span>
                             <div>
-                              <span className="text-xs font-black text-sage uppercase tracking-widest block mb-1">CALCULUS FOUNDATION</span>
-                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">簡化公式與高三微積分基石 (Calculus Base)</h3>
+                              <span className="text-[10px] sm:text-xs font-black text-sage uppercase tracking-widest block mb-0.5">CALCULUS FOUNDATION</span>
+                              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">簡化公式與高三微積分基石 (Calculus Base)</h3>
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className="bg-rose-50/80 p-5 rounded-2xl border border-rose-200 space-y-3">
-                              <span className="text-xs font-black text-rose-600 uppercase tracking-wider block">度數制 (Degree Mode - 繁瑣)</span>
-                              <div className="text-sm md:text-base font-bold text-slate-700 space-y-2">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-rose-50/80 p-4 rounded-2xl border border-rose-200 space-y-2">
+                              <span className="text-[11px] font-black text-rose-600 uppercase tracking-wider block">度數制 (Degree Mode - 繁瑣)</span>
+                              <div className="text-xs sm:text-sm font-bold text-slate-700 space-y-1">
                                 <div>弧長：<MathInline math="s = 2\pi r \cdot \frac{\theta^\circ}{360^\circ}" /></div>
                                 <div>面積：<MathInline math="A = \pi r^2 \cdot \frac{\theta^\circ}{360^\circ}" /></div>
                               </div>
                             </div>
-                            <div className="bg-sage-light p-5 rounded-2xl border border-sage-border space-y-3">
-                              <span className="text-xs font-black text-sage-dark uppercase tracking-wider block">弧度制 (Radian Mode - 極致簡潔)</span>
-                              <div className="text-sm md:text-base font-bold text-slate-800 space-y-2">
+                            <div className="bg-sage-light p-4 rounded-2xl border border-sage-border space-y-2">
+                              <span className="text-[11px] font-black text-sage-dark uppercase tracking-wider block">弧度制 (Radian Mode - 極致簡潔)</span>
+                              <div className="text-xs sm:text-sm font-bold text-slate-800 space-y-1">
                                 <div>弧長：<MathInline math="s = r\theta" /></div>
                                 <div>面積：<MathInline math="A = \frac{1}{2}r^2\theta" /></div>
                               </div>
                             </div>
                           </div>
 
-                          <div className="bg-[#FAF7F2] p-6 rounded-2xl border border-[#DDD3C2] space-y-4">
-                            <h4 className="font-black text-slate-800 text-base md:text-lg flex items-center gap-2">
-                              <i className="fa-solid fa-square-root-variable text-sage text-xl"></i> 高三極限與微分公式的完美契合
+                          <div className="bg-[#FAF7F2] p-4 sm:p-5 rounded-2xl border border-[#DDD3C2] space-y-3">
+                            <h4 className="font-black text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                              <i className="fa-solid fa-square-root-variable text-sage text-base sm:text-lg"></i> 高三極限與微分公式的完美契合
                             </h4>
-                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-bold">
                               只有在弧度制下，微積分中極具關鍵的極限才成立：<MathInline math="\lim_{\theta \to 0}\frac{\sin\theta}{\theta} = 1" />。<br />
                               這導出了無可替代的簡潔微分公式：<MathInline math="(\sin x)' = \cos x" />。若用度數制，每一次微分都會多出一個繁瑣的轉換因子 <MathInline math="\frac{\pi}{180}" />！
                             </p>
@@ -776,35 +776,35 @@
 
                       {/* Reason 3 Expanded View */}
                       {activeModalConcept === 'reason3' && (
-                        <div className="space-y-6">
-                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-                            <span className="w-12 h-12 bg-caramel text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">03</span>
+                        <div className="space-y-4 sm:space-y-5">
+                          <div className="flex items-center gap-3 sm:gap-4 border-b border-slate-100 pb-3 sm:pb-4 pr-10">
+                            <span className="w-10 h-10 sm:w-12 sm:h-12 bg-caramel text-white font-black rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-sm shrink-0">03</span>
                             <div>
-                              <span className="text-xs font-black text-caramel uppercase tracking-widest block mb-1">PHYSICS & PERIODIC MODELING</span>
-                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">對接物理世界與週期性建模 (Periodic Models)</h3>
+                              <span className="text-[10px] sm:text-xs font-black text-caramel uppercase tracking-widest block mb-0.5">PHYSICS & PERIODIC MODELING</span>
+                              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">對接物理世界與週期性建模 (Periodic Models)</h3>
                             </div>
                           </div>
 
-                          <div className="bg-[#FAF7F2] p-6 rounded-2xl border border-[#DDD3C2] space-y-3">
-                            <h4 className="font-black text-caramel-dark text-base md:text-lg flex items-center gap-2">
-                              <i className="fa-solid fa-arrows-spin text-caramel text-xl"></i> 物理圓周運動與角速度 <MathInline math="\omega" />
+                          <div className="bg-[#FAF7F2] p-4 sm:p-5 rounded-2xl border border-[#DDD3C2] space-y-2">
+                            <h4 className="font-black text-caramel-dark text-sm sm:text-base flex items-center gap-2">
+                              <i className="fa-solid fa-arrows-spin text-caramel text-base sm:text-lg"></i> 物理圓周運動與角速度 <MathInline math="\omega" />
                             </h4>
-                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-bold">
                               物理學中描述轉動時，角速度單位為 <MathInline math="\omega\text{ (rad/s)}" />。物體的切向線速度為 <MathInline math="v = r\cdot\omega" />。若用度數算角速度，算出的速度單位將無法直接轉換為 m/s！
                             </p>
                           </div>
 
-                          <div className="bg-caramel-light/80 p-6 rounded-2xl border border-caramel-border space-y-4">
-                            <h4 className="font-black text-slate-800 text-base md:text-lg flex items-center gap-2">
-                              <i className="fa-solid fa-water text-caramel text-xl"></i> 單元 02 週期性數學模型（摩天輪與潮汐）
+                          <div className="bg-caramel-light/80 p-4 sm:p-5 rounded-2xl border border-caramel-border space-y-3">
+                            <h4 className="font-black text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                              <i className="fa-solid fa-water text-caramel text-base sm:text-lg"></i> 單元 02 週期性數學模型（摩天輪與潮汐）
                             </h4>
-                            <p className="text-sm md:text-base text-slate-700 leading-relaxed font-bold">
+                            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-bold">
                               現實世界中的時間 <MathInline math="t" />（秒/小時）是連續實數。建立了弧度概念後，我們才能將時間帶入三角函數模型：
                             </p>
-                            <div className="p-4 bg-white rounded-2xl border border-caramel-border text-center font-serif text-caramel-dark font-black text-lg md:text-xl shadow-xs">
+                            <div className="p-3.5 bg-white rounded-2xl border border-caramel-border text-center font-serif text-caramel-dark font-black text-base sm:text-lg shadow-xs">
                               <MathInline math="y = A \sin\left(\omega t + \phi\right) + k" />
                             </div>
-                            <p className="text-sm text-slate-600 font-bold">
+                            <p className="text-xs text-slate-600 font-bold">
                               這完美解釋了摩天輪高低起伏、海水漲退潮水深與聲波的頻率變化！
                             </p>
                           </div>
@@ -813,42 +813,42 @@
 
                       {/* Definition / Misconception Modal */}
                       {(activeModalConcept === 'def' || activeModalConcept === 'misconception') && (
-                        <div className="space-y-6">
-                          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-                            <span className="w-12 h-12 bg-nordic text-white font-black rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">
+                        <div className="space-y-4 sm:space-y-5">
+                          <div className="flex items-center gap-3 sm:gap-4 border-b border-slate-100 pb-3 sm:pb-4 pr-10">
+                            <span className="w-10 h-10 sm:w-12 sm:h-12 bg-nordic text-white font-black rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-sm shrink-0">
                               <i className={`fa-solid ${activeModalConcept === 'def' ? 'fa-lightbulb' : 'fa-triangle-exclamation'}`}></i>
                             </span>
                             <div>
-                              <span className="text-xs font-black text-nordic uppercase tracking-widest block mb-1">CORE RADIAN CONCEPT</span>
-                              <h3 className="text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">
+                              <span className="text-[10px] sm:text-xs font-black text-nordic uppercase tracking-widest block mb-0.5">CORE RADIAN CONCEPT</span>
+                              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-chenyu text-slate-800 leading-snug">
                                 {activeModalConcept === 'def' ? '什麼是 1 弳 (1 Radian)？' : '教師叮嚀：常見迷思澄清'}
                               </h3>
                             </div>
                           </div>
 
-                          <div className="bg-[#FAF7F2] p-6 md:p-8 rounded-2xl border border-[#DDD3C2] space-y-5">
+                          <div className="bg-[#FAF7F2] p-5 sm:p-6 rounded-2xl border border-[#DDD3C2] space-y-4">
                             {activeModalConcept === 'def' ? (
                               <>
-                                <p className="text-base md:text-lg text-slate-800 font-bold leading-relaxed">
+                                <p className="text-sm sm:text-base text-slate-800 font-bold leading-relaxed">
                                   在半徑為 <MathInline math="r" /> 的圓中，當圓弧長度 <MathInline math="s" /> 剛好等於半徑 <MathInline math="r" /> 時，該圓弧所對應的圓心角就被定義為 <strong>1 弳 (1 rad)</strong>。
                                 </p>
-                                <div className="p-5 bg-white rounded-2xl border border-[#CBD2DB] text-center font-serif text-slate-800 font-black text-xl md:text-2xl shadow-xs">
+                                <div className="p-4 bg-white rounded-2xl border border-[#CBD2DB] text-center font-serif text-slate-800 font-black text-lg sm:text-xl shadow-xs">
                                   <MathInline math="1\text{ rad} = \left(\frac{180}{\pi}\right)^\circ \approx 57.3^\circ" />
                                 </div>
-                                <p className="text-sm text-slate-600 font-bold">
+                                <p className="text-xs sm:text-sm text-slate-600 font-bold">
                                   圓周長為 <MathInline math="2\pi r" />，因此一整圈（360°）對應的圓心角就是 <MathInline math="2\pi\text{ rad}" />。
                                 </p>
                               </>
                             ) : (
                               <>
-                                <p className="text-base md:text-lg text-slate-800 font-bold leading-relaxed">
+                                <p className="text-sm sm:text-base text-slate-800 font-bold leading-relaxed">
                                   學生在剛接觸弧度時，最常犯的錯誤是直接寫出「<MathInline math="\pi = 180" />」，這是嚴重的單位混淆！
                                 </p>
-                                <div className="p-5 bg-rose-50 rounded-2xl border border-rose-200 text-center font-serif text-terracotta font-black text-base md:text-lg shadow-xs space-y-2">
+                                <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center font-serif text-terracotta font-black text-sm sm:text-base shadow-xs space-y-1.5">
                                   <div>❌ 錯誤寫法：<MathInline math="\pi = 180" /> （因為 <MathInline math="\pi \approx 3.14 \neq 180" />）</div>
                                   <div>✅ 正確寫法：<MathInline math="\pi\text{ 弳} = 180^\circ" /> （帶有單位等價關係）</div>
                                 </div>
-                                <p className="text-sm text-slate-600 font-bold">
+                                <p className="text-xs sm:text-sm text-slate-600 font-bold">
                                   <MathInline math="\pi" /> 本身是一個無理數常數（約 3.14159），只有加上「弳度（rad）」後，才代表半圓對應的角度 180°！
                                 </p>
                               </>
@@ -858,13 +858,13 @@
                       )}
                     </div>
 
-                    {/* Modal Bottom Navigation Controls (Next / Prev Step) */}
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                    {/* Modal Bottom Navigation Controls (Next / Prev Step) - Fixed in viewport */}
+                    <div className="mt-4 pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-3 shrink-0">
                       {/* Prev Button */}
                       <button 
                         disabled={!prevConcept}
                         onClick={() => prevConcept && setActiveModalConcept(prevConcept)}
-                        className={`px-5 py-2.5 rounded-xl font-black text-xs md:text-sm flex items-center gap-2 transition-all ${
+                        className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center gap-2 transition-all ${
                           prevConcept 
                             ? 'bg-[#FAF7F2] hover:bg-[#EFE8DC] text-slate-700 border border-[#DDD3C2] shadow-xs cursor-pointer' 
                             : 'bg-slate-100 text-slate-300 border border-slate-200 cursor-not-allowed'
@@ -874,7 +874,7 @@
 
                       {/* Concept Step Indicator */}
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-black text-slate-500 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200 hidden sm:inline-block">
+                        <span className="text-[11px] sm:text-xs font-black text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 hidden sm:inline-block">
                           觀念 {currIdx + 1} / {conceptSequence.length}
                         </span>
                         <div className="flex gap-1.5">
@@ -883,7 +883,7 @@
                               key={c} 
                               onClick={() => setActiveModalConcept(c)}
                               className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
-                                idx === currIdx ? 'bg-nordic w-6' : 'bg-slate-200 hover:bg-slate-300'
+                                idx === currIdx ? 'bg-nordic w-5 sm:w-6' : 'bg-slate-200 hover:bg-slate-300'
                               }`} 
                             />
                           ))}
@@ -894,13 +894,13 @@
                       {nextConcept ? (
                         <button 
                           onClick={() => setActiveModalConcept(nextConcept)}
-                          className="px-5 py-2.5 bg-nordic hover:bg-nordic-dark text-white font-black text-xs md:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
+                          className="px-4 sm:px-5 py-2 sm:py-2.5 bg-nordic hover:bg-nordic-dark text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
                           下一步 <i className="fa-solid fa-chevron-right"></i>
                         </button>
                       ) : (
                         <button 
                           onClick={() => setActiveModalConcept(null)}
-                          className="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-black text-xs md:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
+                          className="px-4 sm:px-5 py-2 sm:py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
                           完成閱讀 <i className="fa-solid fa-check"></i>
                         </button>
                       )}
@@ -4260,8 +4260,99 @@
       );
     };
 
+    // ── Classroom Presentation Mode Configuration ──
+    const presentationTabs = [
+      { id: 'definition', unit: '單元 01', title: '弧度定義與物理展開', icon: 'fa-circle-notch', color: 'text-nordic' },
+      { id: 'quadrant', unit: '單元 01', title: '角度換算與象限角', icon: 'fa-arrows-spin', color: 'text-lavender' },
+      { id: 'sector', unit: '單元 01', title: '扇形弧長與面積實驗室', icon: 'fa-pie-chart', color: 'text-sage' },
+      { id: 'application', unit: '單元 01', title: '哥德式尖拱與地球測量', icon: 'fa-landmark', color: 'text-caramel' },
+      { id: 'trig', unit: '單元 01', title: '弧度三角比與計算機', icon: 'fa-calculator', color: 'text-terracotta' },
+      { id: 'quiz', unit: '單元 01', title: '單元01 觀念是非題', icon: 'fa-clipboard-check', color: 'text-sage' },
+      { id: 'practice', unit: '單元 01', title: '單元01 隨堂引導題', icon: 'fa-graduation-cap', color: 'text-lavender' },
+      { id: 'periodic-sine', unit: '單元 02', title: '單位圓與正弦波生成', icon: 'fa-circle-nodes', color: 'text-nordic' },
+      { id: 'periodic-transform', unit: '單元 02', title: '正弦圖形變換實驗室', icon: 'fa-arrows-up-down-left-right', color: 'text-lavender' },
+      { id: 'periodic-models', unit: '單元 02', title: '生活週期性現象模擬', icon: 'fa-earth-asia', color: 'text-caramel' },
+      { id: 'periodic-quiz', unit: '單元 02', title: '單元02 觀念是非題', icon: 'fa-clipboard-check', color: 'text-sage' },
+      { id: 'periodic-practice', unit: '單元 02', title: '單元02 經典素養題', icon: 'fa-graduation-cap', color: 'text-lavender' }
+    ];
+
+    const presentationTeachingNotes = {
+      'definition': {
+        focus: '理解 1 弳的無因次實數幾何定義與物理展開。',
+        prompts: '「若圓弧長度剛好等於半徑，圓心角是多少度？」、「為什麼說弧度是無因次純實數？」',
+        pitfalls: '強烈澄清：「π rad = 180°」而非「π = 180」。不可省略單位！',
+        steps: '1. 拖曳圓心角滑桿至 1.0 rad。 2. 拉動物理展開滑桿至 100% 直觀示範弧長拉直與半徑刻度重合。'
+      },
+      'quadrant': {
+        focus: '掌握度數與弧度的雙向互換及同界角螺旋軌跡。',
+        prompts: '「同界角在幾何圖形上如何呈現？」、「正角與負角的繞轉方向差別是什麼？」',
+        pitfalls: '同界角相差 2kπ 弳（k ∈ Z），注意與度數 360° × k 對照。',
+        steps: '1. 點擊快捷角度按鈕 (π/3, 2π/3 等)。 2. 操作螺旋繞轉動畫，展示超越 360° 的旋轉量。'
+      },
+      'sector': {
+        focus: '體會弧長 s = rθ 與面積 A = 1/2 r² θ 簡潔結構。',
+        prompts: '「為什麼弧度制下的扇形面積不需要除以 360°？」',
+        pitfalls: '公式中的 θ 必須以「弧度 (rad)」帶入，若給度數必須先乘以 π/180！',
+        steps: '1. 調整半徑 r 與弧度 θ。 2. 觀察弧長與扇形面積數據變化的即時連動。'
+      },
+      'application': {
+        focus: '跨領域應用：哥德式尖拱弧長結構與古希臘地球測量。',
+        prompts: '「古希臘埃拉托斯特尼如何只用陽光影長測出地球周長？」',
+        pitfalls: '地球圓心角對應弧長時，兩城市距離 s 與緯度差 θ 必須單位一致。',
+        steps: '1. 切換「哥德式尖拱」與「埃拉托斯特尼測地球」模式。 2. 示範參數調整與結構算式。'
+      },
+      'trig': {
+        focus: '將角度實數化並對接三角函數，結合 CASIO 擬真工程計算機。',
+        prompts: '「計算機上 Deg 與 Rad 模式按錯會發生什麼事？」',
+        pitfalls: '工程計算機預設為 Deg 模式，計算 sin(1) 時若未切換成 Rad 會算錯！',
+        steps: '1. 點擊單位圓角度選單。 2. 操作下方 CASIO 計算機鍵盤切換 DRG 模式示範演練。'
+      },
+      'quiz': {
+        focus: '單元 01 弧度量觀念是非澄清與互動隨堂測驗。',
+        prompts: '邀請全班學生舉手發言回答每題是非判斷，再點擊顯示詳解與圖解。',
+        pitfalls: '題目陷阱包含「扇形面積公式單位」、「同界角表達式」等。',
+        steps: '1. 按順序點選第 1~7 題。 2. 讓學生先作答，再點擊「師長觀念詳解」。'
+      },
+      'practice': {
+        focus: '單元 01 經典素養引導練習題剖析。',
+        prompts: '「遇到情境長題幹，如何提取關鍵數據（半徑 r, 弧長 s）？」',
+        pitfalls: '題目可能同時出現度數與弧度，須先統一單位。',
+        steps: '1. 展開「💡 解題思考方向」。 2. 示範步驟一到步驟三的代數推導。'
+      },
+      'periodic-sine': {
+        focus: '單位圓繞轉動態投射出正弦波 y = sin(x) 軌跡。',
+        prompts: '「圓周運動的 y 座標與時間 t 繪製出的圖形是什麼形狀？」',
+        pitfalls: '注意圖形橫軸是弧度 x（純實數），縱軸是振幅 y（-1 到 +1）。',
+        steps: '1. 按下「▶ 播放動態投射」。 2. 觀察圓周紅點與波形紅點的水平連線軌跡。'
+      },
+      'periodic-transform': {
+        focus: '探索 y = A sin(B(x - C)) + D 四大參數變換。',
+        prompts: '「振幅 A 與週期 T = 2π/B 如何改變圖形特徵？」',
+        pitfalls: '相位平移 C：y = sin(2x - π) 應寫成 y = sin(2(x - π/2))，平移量為 π/2 而非 π！',
+        steps: '1. 依序拉動 A, B, C, D 滑桿。 2. 比對基準正弦波 (虛線) 與變換後波形 (實線)。'
+      },
+      'periodic-models': {
+        focus: '生活週期現象：摩天輪車廂高度與海港潮汐水深建模。',
+        prompts: '「摩天輪轉一圈要多久？週期 T 怎麼反應在函數 B 參數中？」',
+        pitfalls: '最低點高度與最高點高度相加除以 2 為中線 D；半差為振幅 A。',
+        steps: '1. 切換「摩天輪模型」或「潮汐水位模型」。 2. 播放動態模擬並比對時間與高度關係。'
+      },
+      'periodic-quiz': {
+        focus: '單元 02 週期模型是非觀念檢測與迷思破除。',
+        prompts: '「正弦函數 y = sin(x) 的週期是 2π，那 y = sin(2x) 的週期是多少？」',
+        pitfalls: '平移方向：x 減向右平移，x 加向左平移。',
+        steps: '1. 讓學生思考後發言。 2. 點擊選項並對照師長觀念剖析。'
+      },
+      'periodic-practice': {
+        focus: '單元 02 經典素養大考題型深入解析。',
+        prompts: '「如何在多解三角方程式中求出指定區間內的所有解？」',
+        pitfalls: '正弦函數在 0 到 2π 之間同一個 y 值通常有兩個對稱解。',
+        steps: '1. 開啟解題方向提示。 2. 逐步導引正弦方程式求解與週期延展。'
+      }
+    };
+
     // ── TAB 0: 首頁總覽 (Dual-Unit Home Dashboard) ──
-    const HomeTab = ({ setActiveTab, totalScore, onOpenResetModal, unitFilter, setUnitFilter }) => {
+    const HomeTab = ({ setActiveTab, totalScore, onOpenResetModal, unitFilter, setUnitFilter, onStartPresentation }) => {
       return (
         <div className="space-y-6 animate-slide-up pb-10">
           {/* Hero Banner */}
@@ -4289,6 +4380,9 @@
                 從「物理拉直弧長」進入實數角度世界，再到「單位圓投射正弦波」與「摩天輪/潮汐週期建模」，親身體驗數學模型之美。
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
+                <button onClick={onStartPresentation} className="bg-gradient-to-r from-amber-400 to-[#C59B63] hover:from-amber-500 hover:to-[#B58B53] text-[#1E2834] font-black px-6 py-2.5 rounded-xl transition-all text-sm flex items-center gap-2 hover:-translate-y-0.5 shadow-lg">
+                  <i className="fa-solid fa-chalkboard-user text-sm"></i> 開啟上課簡報投影模式 (P)
+                </button>
                 <button onClick={() => setActiveTab('definition')} className="bg-[#D4C3AB] hover:bg-[#C5B297] text-[#1E2834] font-black px-6 py-2.5 rounded-xl transition-all text-sm flex items-center gap-2 hover:-translate-y-0.5 shadow-lg">
                   <i className="fa-solid fa-rocket text-xs"></i> 探索單元 01 (弧度量)
                 </button>
@@ -4408,7 +4502,7 @@
                   <span className="text-[10px] bg-caramel-light text-caramel-dark px-2 py-0.5 rounded-full font-black uppercase border border-caramel-border">Teacher's Note</span>
                 </div>
                 <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                  數學源於生活，更用於解釋大自然的規律。「弧度量」讓我們能以無因次的實數描述轉動；而「週期性數學模型」則將這種圓周運動拓展為時間與空間的波浪起伏。<br /><br />
+                  數學源於生活，更用於解釋大自然與週期世界的規律。「弧度量」讓我們能以無因次的純實數描述旋轉；而「週期性數學模型」則將圓周運動拓展為時間與空間的波浪起伏。<br /><br />
                   無論是旋轉的摩天輪、規律漲退的潮汐、還是夜空中陰晴圓缺的月亮，正弦函數以其無可挑剔的對稱性，描繪出宇宙最動人的節奏！
                 </p>
               </div>
@@ -4431,6 +4525,13 @@
       const [toastMsg, setToastMsg] = useState('');
       const [unitFilter, setUnitFilter] = useState('all'); // 'all', 'u1', 'u2'
 
+      // Classroom Presentation Mode States
+      const [isPresentation, setIsPresentation] = useState(false);
+      const [presentationZoom, setPresentationZoom] = useState(125); // default 125% for projection clarity
+      const [isLaserPointer, setIsLaserPointer] = useState(false);
+      const [showTeacherNotes, setShowTeacherNotes] = useState(false);
+      const [laserPos, setLaserPos] = useState({ x: -100, y: -100 });
+
       useEffect(() => {
         const handleStorage = () => setGlobalProgress(getStoredScores());
         window.addEventListener('storage', handleStorage);
@@ -4440,6 +4541,117 @@
           window.removeEventListener('score_updated', handleStorage);
         };
       }, []);
+
+      // Current slide index in presentation mode
+      const currentSlideIdx = presentationTabs.findIndex(t => t.id === activeTab);
+      const activeSlide = currentSlideIdx >= 0 ? presentationTabs[currentSlideIdx] : presentationTabs[0];
+
+      const enterPresentation = () => {
+        setIsPresentation(true);
+        if (activeTab === 'home') {
+          setActiveTab('definition');
+        }
+        try {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          }
+        } catch (e) {}
+        setToastMsg('已開啟上課簡報投影模式 (方向鍵切換 / 按 L 雷射筆 / 按 ESC 退出)');
+        setTimeout(() => setToastMsg(''), 3500);
+      };
+
+      const exitPresentation = () => {
+        setIsPresentation(false);
+        setIsLaserPointer(false);
+        try {
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
+        } catch (e) {}
+      };
+
+      const goToPrevSlide = () => {
+        const idx = presentationTabs.findIndex(t => t.id === activeTab);
+        if (idx > 0) {
+          setActiveTab(presentationTabs[idx - 1].id);
+        } else {
+          setActiveTab(presentationTabs[presentationTabs.length - 1].id);
+        }
+      };
+
+      const goToNextSlide = () => {
+        const idx = presentationTabs.findIndex(t => t.id === activeTab);
+        if (idx >= 0 && idx < presentationTabs.length - 1) {
+          setActiveTab(presentationTabs[idx + 1].id);
+        } else {
+          setActiveTab(presentationTabs[0].id);
+        }
+      };
+
+      // Fullscreen change listener
+      useEffect(() => {
+        const handleFSChange = () => {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && isPresentation) {
+            // User exited via ESC browser default
+          }
+        };
+        document.addEventListener('fullscreenchange', handleFSChange);
+        return () => document.removeEventListener('fullscreenchange', handleFSChange);
+      }, [isPresentation]);
+
+      // Laser pointer mouse movement
+      useEffect(() => {
+        if (!isLaserPointer) return;
+        const handleMouseMove = (e) => {
+          setLaserPos({ x: e.clientX, y: e.clientY });
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+      }, [isLaserPointer]);
+
+      // Keyboard shortcuts for classroom presentation
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          // If typing in input, ignore
+          if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+
+          // Toggle presentation mode with 'P' or 'p' or 'F' or 'f'
+          if ((e.key === 'p' || e.key === 'P' || e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            if (isPresentation) exitPresentation();
+            else enterPresentation();
+            return;
+          }
+
+          if (!isPresentation) return;
+
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            exitPresentation();
+          } else if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+            e.preventDefault();
+            goToNextSlide();
+          } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            goToPrevSlide();
+          } else if (e.key === 'l' || e.key === 'L') {
+            e.preventDefault();
+            setIsLaserPointer(prev => !prev);
+          } else if (e.key === 'n' || e.key === 'N') {
+            e.preventDefault();
+            setShowTeacherNotes(prev => !prev);
+          } else if (e.key === '=' || e.key === '+') {
+            e.preventDefault();
+            setPresentationZoom(z => Math.min(180, z + 10));
+          } else if (e.key === '-') {
+            e.preventDefault();
+            setPresentationZoom(z => Math.max(90, z - 10));
+          }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [isPresentation, activeTab]);
 
       const updateGlobalScore = (category, key, value) => {
         setGlobalProgress(prev => {
@@ -4477,15 +4689,10 @@
         setTimeout(() => setToastMsg(''), 3000);
       };
 
-      // Score Calculation:
-      // Unit 1: 7 Misconception (10 pts = 70) + 3 Practice (10 pts = 30) = 100 pts
-      // Unit 2: 7 Misconception (10 pts = 70) + 4 Practice (7.5 pts = 30 or 10 pts = 40) => Total 200 pts
       const calculateTotalScore = (s) => {
         let total = 0;
-        // Unit 1
         total += Object.values(s?.misconception || {}).filter(Boolean).length * 10;
         total += Object.values(s?.practice || {}).filter(Boolean).length * 10;
-        // Unit 2
         total += Object.values(s?.misconception_u2 || {}).filter(Boolean).length * 10;
         total += Object.values(s?.practice_u2 || {}).filter(Boolean).length * 7.5;
         return Math.min(200, Math.max(0, Math.round(total)));
@@ -4519,150 +4726,336 @@
         return item.unit === unitFilter;
       });
 
+      const activeNote = presentationTeachingNotes[activeTab] || presentationTeachingNotes['definition'];
+
       return (
-        <div className="min-h-screen flex flex-col md:flex-row gap-4 p-4 md:p-8 max-w-[1440px] mx-auto relative">
-          {/* Background Decorative Blobs */}
-          <div className="bg-decorations">
-            <div className="blob-1"></div>
-            <div className="blob-2"></div>
-            <div className="blob-3"></div>
-          </div>
-
-          {/* Left Sidebar (320px) */}
-          <div className="w-full md:w-[320px] space-y-4 shrink-0 relative z-10">
-            {/* Header Brand Card */}
-            <div className="textbook-card p-6 md:p-8 rounded-2xl cursor-pointer transition-all hover:shadow-md border border-[#DDD3C2]" onClick={() => setActiveTab('home')}>
-              <div className="text-[10px] font-black bg-[#EAE3D5] text-slate-800 border border-[#DDD3C2] px-3 py-1 rounded-full inline-block mb-3 uppercase tracking-widest shadow-xs">
-                10B MATH · UNITS 01 & 02
-              </div>
-              <h1 className="text-2xl md:text-3xl font-bold font-chenyu leading-tight text-slate-800">
-                弧度量與週期模型<br />
-                <span className="text-base font-serif text-[#C59B63] font-normal">Radian & Periodic Lab</span>
-              </h1>
-              <p className="text-[11px] font-bold mt-3 flex items-center gap-1.5 text-slate-500">
-                <i className="fa-solid fa-house text-slate-600"></i> 點擊返回首頁總覽
-              </p>
-            </div>
-
-            {/* Unit Filter Selector Pills */}
-            <div className="bg-[#FAF7F2] p-1.5 rounded-2xl border border-[#DDD3C2] flex gap-1 shadow-xs">
-              {[
-                { id: 'all', label: '全部單元' },
-                { id: 'u1', label: '單元 01' },
-                { id: 'u2', label: '單元 02' },
-              ].map(f => (
-                <button key={f.id} onClick={() => setUnitFilter(f.id)}
-                  className={`flex-1 py-1.5 text-xs font-black rounded-xl transition-all ${
-                    unitFilter === f.id ? 'bg-[#2B3848] text-white shadow-xs' : 'text-slate-600 hover:bg-[#EFE8DC]'
-                  }`}>
-                  {f.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Navigation Menu */}
-            <div className="bg-[#FAF7F2]/90 backdrop-blur-md rounded-2xl shadow-xs border border-[#DDD3C2] p-3 space-y-1 max-h-[520px] overflow-y-auto no-scrollbar">
-              {visibleNav.map((tab, idx) => {
-                if (tab.sectionHeader) {
-                  return (
-                    <div key={`header-${idx}`} className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 pt-3 pb-1">
-                      {tab.sectionHeader}
-                    </div>
-                  );
-                }
-
-                const isActive = activeTab === tab.id;
-                return (
-                  <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 font-black border ${
-                      isActive
-                        ? 'bg-[#2B3848] text-white border-[#2B3848] shadow-md transform scale-[1.01]'
-                        : 'border-transparent text-slate-700 hover:bg-[#EAE3D5]/70 hover:text-slate-900'
-                    }`}>
-                    <div className="flex items-center gap-3">
-                      <i className={`fa-solid ${tab.icon} ${isActive ? 'text-white' : tab.color}`}></i>
-                      <span className="text-xs">{tab.title}</span>
-                    </div>
-                    <i className="fa-solid fa-chevron-right text-[10px] opacity-40"></i>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Score Card in Sidebar */}
-            <div className="textbook-card p-5 rounded-2xl border border-[#DDD3C2]">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-black text-slate-500 uppercase tracking-widest">全單元學習成就</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-black text-slate-800">{totalScore} / 200</span>
-                  <button onClick={() => setShowResetModal(true)} title="重置進度為 0 分"
-                    className="text-[11px] text-slate-500 hover:text-rose-600 font-bold transition-colors">
-                    <i className="fa-solid fa-rotate-left mr-0.5"></i>重置
-                  </button>
-                </div>
-              </div>
-              <div className="w-full bg-[#EAE3D5] rounded-full h-2.5 overflow-hidden">
-                <div className="progress-bar transition-all duration-500" style={{ width: `${(totalScore / 200) * 100}%` }}></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Main Content Pane */}
-          <div className="flex-1 w-full max-w-4xl no-scrollbar overflow-y-auto relative z-10">
-            {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} totalScore={totalScore} onOpenResetModal={() => setShowResetModal(true)} unitFilter={unitFilter} setUnitFilter={setUnitFilter} />}
-            {/* Unit 01 Tabs */}
-            {activeTab === 'definition' && <DefinitionTab />}
-            {activeTab === 'quadrant' && <QuadrantTab />}
-            {activeTab === 'sector' && <SectorTab />}
-            {activeTab === 'application' && <ApplicationTab />}
-            {activeTab === 'trig' && <TrigTab />}
-            {activeTab === 'quiz' && <MisconceptionTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
-            {activeTab === 'practice' && <PracticeTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
-            {/* Unit 02 Tabs */}
-            {activeTab === 'periodic-sine' && <PeriodicSineTab />}
-            {activeTab === 'periodic-transform' && <PeriodicTransformTab />}
-            {activeTab === 'periodic-models' && <PeriodicModelsTab />}
-            {activeTab === 'periodic-quiz' && <PeriodicQuizTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
-            {activeTab === 'periodic-practice' && <PeriodicPracticeTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
-          </div>
-
-          {/* Reset Modal */}
-          {showResetModal && (
-            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
-              onClick={() => setShowResetModal(false)}>
-              <div className="bg-[#FAF7F2] rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-[#DDD3C2] animate-scale-up text-left"
-                onClick={e => e.stopPropagation()}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0">
-                    <i className="fa-solid fa-triangle-exclamation"></i>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-slate-800">確定要重置所有進度嗎？</h3>
-                    <p className="text-xs text-slate-400 font-bold tracking-wider">RESET ALL UNITS PROGRESS</p>
-                  </div>
-                </div>
-                <p className="text-sm font-bold text-slate-600 leading-relaxed mb-6">
-                  此操作將清除單元 01 與單元 02 的所有是非題與隨堂練習作答紀錄，並將您的學習成就進度重設為 <strong className="text-rose-600 font-black">0 分</strong>。
-                </p>
-                <div className="flex gap-3 justify-end">
-                  <button onClick={() => setShowResetModal(false)}
-                    className="px-5 py-2.5 rounded-xl font-black text-xs text-slate-700 bg-[#EAE3D5] hover:bg-[#DDD3C2] transition-all">
-                    取消
-                  </button>
-                  <button onClick={handleConfirmReset}
-                    className="px-5 py-2.5 rounded-xl font-black text-xs text-white bg-rose-600 hover:bg-rose-500 shadow-md shadow-rose-500/30 transition-all flex items-center gap-2">
-                    <i className="fa-solid fa-rotate-left"></i> 確認重置為 0 分
-                  </button>
-                </div>
-              </div>
+        <div className={`min-h-screen ${isPresentation ? 'presentation-mode-active' : ''} ${isPresentation && isLaserPointer ? 'laser-active-cursor' : ''}`}>
+          
+          {/* Laser Pointer Red Dot Overlay */}
+          {isPresentation && isLaserPointer && (
+            <div 
+              className="pointer-events-none fixed z-50 rounded-full transition-transform duration-75 ease-out"
+              style={{
+                left: `${laserPos.x}px`,
+                top: `${laserPos.y}px`,
+                width: '20px',
+                height: '20px',
+                transform: 'translate(-50%, -50%)',
+                background: 'radial-gradient(circle, #FF1A3C 0%, #E60021 70%, rgba(230,0,33,0) 100%)',
+                boxShadow: '0 0 14px 4px rgba(255, 26, 60, 0.95), 0 0 30px 10px rgba(230, 0, 33, 0.5)',
+                border: '2px solid rgba(255, 255, 255, 0.95)'
+              }}>
+              <div className="absolute inset-0 rounded-full laser-pulse-ring bg-rose-500 opacity-80"></div>
             </div>
           )}
 
-          {/* Toast Notification */}
-          {toastMsg && (
-            <div className="fixed bottom-6 right-6 z-50 bg-[#2B3848]/95 text-white font-black text-sm px-5 py-3 rounded-2xl shadow-xl border border-slate-700/50 backdrop-blur-md animate-slide-up flex items-center gap-3">
-              <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
-              {toastMsg}
+          {/* ── PRESENTATION MODE OVERLAY VIEW ── */}
+          {isPresentation ? (
+            <div className="fixed inset-0 z-40 presentation-mode-overlay overflow-y-auto pt-20 pb-12 px-4 md:px-12">
+              
+              {/* Floating Top Control Bar */}
+              <div className="fixed top-0 left-0 right-0 z-50 bg-[#1E2834]/95 text-white backdrop-blur-md px-4 md:px-8 py-3 shadow-2xl border-b border-slate-700/80 flex flex-wrap items-center justify-between gap-3">
+                
+                {/* Left Tag & Title */}
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    上課簡報模式
+                  </span>
+                  <div className="hidden sm:flex items-center gap-2 text-slate-300 font-bold text-sm">
+                    <span className="bg-slate-700/70 text-slate-200 px-2.5 py-0.5 rounded text-xs">{activeSlide.unit}</span>
+                    <i className={`fa-solid ${activeSlide.icon} text-amber-300`}></i>
+                    <span className="text-white font-black">{activeSlide.title}</span>
+                  </div>
+                </div>
+
+                {/* Center Navigation Buttons & Dropdown */}
+                <div className="flex items-center gap-2 bg-slate-800/90 p-1 rounded-2xl border border-slate-700 shadow-inner">
+                  <button onClick={goToPrevSlide} title="上一單元 (← / PageUp)"
+                    className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-black text-xs transition-all flex items-center gap-1">
+                    <i className="fa-solid fa-chevron-left"></i> <span className="hidden md:inline">上一頁</span>
+                  </button>
+
+                  <select value={activeTab} onChange={e => setActiveTab(e.target.value)}
+                    className="bg-slate-900 text-amber-200 font-black text-xs px-3 py-1.5 rounded-xl border border-slate-600 focus:outline-none text-center cursor-pointer">
+                    {presentationTabs.map((st, i) => (
+                      <option key={st.id} value={st.id}>
+                        {i + 1}. {st.unit} · {st.title}
+                      </option>
+                    ))}
+                  </select>
+
+                  <span className="text-xs font-mono font-black text-slate-400 px-1">
+                    {currentSlideIdx >= 0 ? currentSlideIdx + 1 : 1} / {presentationTabs.length}
+                  </span>
+
+                  <button onClick={goToNextSlide} title="下一單元 (→ / Space / PageDown)"
+                    className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-black text-xs transition-all flex items-center gap-1 shadow-xs">
+                    <span className="hidden md:inline">下一頁</span> <i className="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+
+                {/* Right Interactive Tools */}
+                <div className="flex items-center gap-2">
+                  {/* Laser Pointer Toggle */}
+                  <button onClick={() => setIsLaserPointer(!isLaserPointer)}
+                    className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 border shadow-xs ${
+                      isLaserPointer 
+                        ? 'bg-rose-600 text-white border-rose-400 ring-2 ring-rose-400/50' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                    }`}
+                    title="快捷鍵: L">
+                    <i className="fa-solid fa-circle text-rose-400 text-[10px]"></i>
+                    <span className="hidden sm:inline">雷射筆 (L)</span>
+                  </button>
+
+                  {/* Teacher Notes Toggle */}
+                  <button onClick={() => setShowTeacherNotes(!showTeacherNotes)}
+                    className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 border shadow-xs ${
+                      showTeacherNotes 
+                        ? 'bg-amber-500 text-slate-950 border-amber-300' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                    }`}
+                    title="快捷鍵: N">
+                    <i className="fa-solid fa-chalkboard-user"></i>
+                    <span className="hidden sm:inline">教學重點 (N)</span>
+                  </button>
+
+                  {/* Zoom Controls */}
+                  <div className="hidden lg:flex items-center bg-slate-800 rounded-xl border border-slate-700 p-1 text-xs">
+                    <button onClick={() => setPresentationZoom(z => Math.max(90, z - 10))} className="px-2 py-0.5 text-slate-300 hover:text-white font-black">-</button>
+                    <span className="px-2 font-mono text-amber-200 font-bold">{presentationZoom}%</span>
+                    <button onClick={() => setPresentationZoom(z => Math.min(180, z + 10))} className="px-2 py-0.5 text-slate-300 hover:text-white font-black">+</button>
+                  </div>
+
+                  {/* Exit Presentation */}
+                  <button onClick={exitPresentation} title="退出簡報模式 (ESC)"
+                    className="px-3.5 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 rounded-xl font-black text-xs transition-all flex items-center gap-1.5">
+                    <i className="fa-solid fa-xmark"></i> 退出 (ESC)
+                  </button>
+                </div>
+              </div>
+
+              {/* Presentation Slide Main Stage */}
+              <div 
+                className="max-w-6xl mx-auto transition-transform duration-200"
+                style={{ transform: `scale(${presentationZoom / 100})`, transformOrigin: 'top center' }}>
+                {activeTab === 'definition' && <DefinitionTab />}
+                {activeTab === 'quadrant' && <QuadrantTab />}
+                {activeTab === 'sector' && <SectorTab />}
+                {activeTab === 'application' && <ApplicationTab />}
+                {activeTab === 'trig' && <TrigTab />}
+                {activeTab === 'quiz' && <MisconceptionTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+                {activeTab === 'practice' && <PracticeTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+                {activeTab === 'periodic-sine' && <PeriodicSineTab />}
+                {activeTab === 'periodic-transform' && <PeriodicTransformTab />}
+                {activeTab === 'periodic-models' && <PeriodicModelsTab />}
+                {activeTab === 'periodic-quiz' && <PeriodicQuizTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+                {activeTab === 'periodic-practice' && <PeriodicPracticeTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+              </div>
+
+              {/* Floating Teacher Notes Drawer */}
+              {showTeacherNotes && (
+                <div className="fixed bottom-6 right-6 z-50 max-w-md w-full bg-[#1E2834]/95 text-white rounded-3xl p-6 shadow-2xl border border-amber-500/40 backdrop-blur-xl animate-slide-up">
+                  <div className="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+                    <div className="flex items-center gap-2 text-amber-300 font-black text-sm">
+                      <i className="fa-solid fa-chalkboard-user text-base"></i>
+                      <span>師長教學亮點指南 · {activeSlide.title}</span>
+                    </div>
+                    <button onClick={() => setShowTeacherNotes(false)} className="text-slate-400 hover:text-white font-bold text-xs">
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-3 text-xs font-bold leading-relaxed">
+                    <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                      <span className="text-amber-300 font-black block mb-1">📌 課堂核心 Focus：</span>
+                      <p className="text-slate-200">{activeNote.focus}</p>
+                    </div>
+
+                    <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                      <span className="text-emerald-300 font-black block mb-1">🎯 引導提問建議：</span>
+                      <p className="text-slate-200">{activeNote.prompts}</p>
+                    </div>
+
+                    <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                      <span className="text-rose-300 font-black block mb-1">⚠️ 迷思澄清防錯：</span>
+                      <p className="text-slate-200">{activeNote.pitfalls}</p>
+                    </div>
+
+                    <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                      <span className="text-sky-300 font-black block mb-1">💡 互動演示步驟：</span>
+                      <p className="text-slate-200">{activeNote.steps}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* ── NORMAL DESKTOP/MOBILE VIEW ── */
+            <div className="min-h-screen flex flex-col md:flex-row gap-4 p-4 md:p-8 max-w-[1440px] mx-auto relative">
+              {/* Background Decorative Blobs */}
+              <div className="bg-decorations">
+                <div className="blob-1"></div>
+                <div className="blob-2"></div>
+                <div className="blob-3"></div>
+              </div>
+
+              {/* Left Sidebar (320px) */}
+              <div className="w-full md:w-[320px] space-y-4 shrink-0 relative z-10">
+                {/* Header Brand Card */}
+                <div className="textbook-card p-6 md:p-8 rounded-2xl border border-[#DDD3C2]">
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="text-[10px] font-black bg-[#EAE3D5] text-slate-800 border border-[#DDD3C2] px-3 py-1 rounded-full inline-block uppercase tracking-widest shadow-xs">
+                      10B MATH · UNITS 01 & 02
+                    </span>
+                    <button onClick={() => setActiveTab('home')} title="返回首頁" className="text-slate-500 hover:text-slate-800 text-xs font-bold">
+                      <i className="fa-solid fa-house"></i>
+                    </button>
+                  </div>
+                  <h1 className="text-2xl md:text-3xl font-bold font-chenyu leading-tight text-slate-800 cursor-pointer" onClick={() => setActiveTab('home')}>
+                    弧度量與週期模型<br />
+                    <span className="text-base font-serif text-[#C59B63] font-normal">Radian & Periodic Lab</span>
+                  </h1>
+                  
+                  {/* Presentation Mode Quick Start Button in Sidebar Header */}
+                  <button onClick={enterPresentation} className="w-full mt-4 py-2.5 px-4 bg-gradient-to-r from-nordic to-[#2B3848] hover:from-nordic-dark hover:to-[#1E2834] text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-[1.02] cursor-pointer">
+                    <i className="fa-solid fa-chalkboard-user text-amber-300 text-sm"></i>
+                    <span>開啟上課簡報投影模式 (P)</span>
+                  </button>
+                </div>
+
+                {/* Unit Filter Selector Pills */}
+                <div className="bg-[#FAF7F2] p-1.5 rounded-2xl border border-[#DDD3C2] flex gap-1 shadow-xs">
+                  {[
+                    { id: 'all', label: '全部單元' },
+                    { id: 'u1', label: '單元 01' },
+                    { id: 'u2', label: '單元 02' },
+                  ].map(f => (
+                    <button key={f.id} onClick={() => setUnitFilter(f.id)}
+                      className={`flex-1 py-1.5 text-xs font-black rounded-xl transition-all ${
+                        unitFilter === f.id ? 'bg-[#2B3848] text-white shadow-xs' : 'text-slate-600 hover:bg-[#EFE8DC]'
+                      }`}>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Navigation Menu */}
+                <div className="bg-[#FAF7F2]/90 backdrop-blur-md rounded-2xl shadow-xs border border-[#DDD3C2] p-3 space-y-1 max-h-[520px] overflow-y-auto no-scrollbar">
+                  {visibleNav.map((tab, idx) => {
+                    if (tab.sectionHeader) {
+                      return (
+                        <div key={`header-${idx}`} className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 pt-3 pb-1">
+                          {tab.sectionHeader}
+                        </div>
+                      );
+                    }
+
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                        className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 font-black border ${
+                          isActive
+                            ? 'bg-[#2B3848] text-white border-[#2B3848] shadow-md transform scale-[1.01]'
+                            : 'border-transparent text-slate-700 hover:bg-[#EAE3D5]/70 hover:text-slate-900'
+                        }`}>
+                        <div className="flex items-center gap-3">
+                          <i className={`fa-solid ${tab.icon} ${isActive ? 'text-white' : tab.color}`}></i>
+                          <span className="text-xs">{tab.title}</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] opacity-40"></i>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Score Card in Sidebar */}
+                <div className="textbook-card p-5 rounded-2xl border border-[#DDD3C2]">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-black text-slate-500 uppercase tracking-widest">全單元學習成就</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-black text-slate-800">{totalScore} / 200</span>
+                      <button onClick={() => setShowResetModal(true)} title="重置進度為 0 分"
+                        className="text-[11px] text-slate-500 hover:text-rose-600 font-bold transition-colors">
+                        <i className="fa-solid fa-rotate-left mr-0.5"></i>重置
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-full bg-[#EAE3D5] rounded-full h-2.5 overflow-hidden">
+                    <div className="progress-bar transition-all duration-500" style={{ width: `${(totalScore / 200) * 100}%` }}></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Main Content Pane */}
+              <div className="flex-1 w-full max-w-4xl no-scrollbar overflow-y-auto relative z-10">
+                {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} totalScore={totalScore} onOpenResetModal={() => setShowResetModal(true)} unitFilter={unitFilter} setUnitFilter={setUnitFilter} onStartPresentation={enterPresentation} />}
+                {/* Unit 01 Tabs */}
+                {activeTab === 'definition' && <DefinitionTab />}
+                {activeTab === 'quadrant' && <QuadrantTab />}
+                {activeTab === 'sector' && <SectorTab />}
+                {activeTab === 'application' && <ApplicationTab />}
+                {activeTab === 'trig' && <TrigTab />}
+                {activeTab === 'quiz' && <MisconceptionTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+                {activeTab === 'practice' && <PracticeTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+                {/* Unit 02 Tabs */}
+                {activeTab === 'periodic-sine' && <PeriodicSineTab />}
+                {activeTab === 'periodic-transform' && <PeriodicTransformTab />}
+                {activeTab === 'periodic-models' && <PeriodicModelsTab />}
+                {activeTab === 'periodic-quiz' && <PeriodicQuizTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+                {activeTab === 'periodic-practice' && <PeriodicPracticeTab globalProgress={globalProgress} updateGlobalScore={updateGlobalScore} />}
+              </div>
+
+              {/* Floating Quick Launcher Button in Normal View */}
+              <button 
+                onClick={enterPresentation} 
+                title="開啟上課簡報投影模式 (按 P)" 
+                className="fixed bottom-6 left-6 z-30 bg-[#2B3848]/95 hover:bg-[#1E2834] text-white font-black px-4 py-3 rounded-2xl shadow-2xl border border-slate-600/80 backdrop-blur-md transition-all flex items-center gap-2.5 group cursor-pointer hover:scale-105">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <i className="fa-solid fa-chalkboard-user text-amber-300 text-base group-hover:scale-110 transition-transform"></i>
+                <span className="text-xs">簡報投影模式 (P)</span>
+              </button>
+
+              {/* Reset Modal */}
+              {showResetModal && (
+                <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+                  onClick={() => setShowResetModal(false)}>
+                  <div className="bg-[#FAF7F2] rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-[#DDD3C2] animate-scale-up text-left"
+                    onClick={e => e.stopPropagation()}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0">
+                        <i className="fa-solid fa-triangle-exclamation"></i>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-black text-slate-800">確定要重置所有進度嗎？</h3>
+                        <p className="text-xs text-slate-400 font-bold tracking-wider">RESET ALL UNITS PROGRESS</p>
+                      </div>
+                    </div>
+                    <p className="text-sm font-bold text-slate-600 leading-relaxed mb-6">
+                      此操作將清除單元 01 與單元 02 的所有是非題與隨堂練習作答紀錄，並將您的學習成就進度重設為 <strong className="text-rose-600 font-black">0 分</strong>。
+                    </p>
+                    <div className="flex gap-3 justify-end">
+                      <button onClick={() => setShowResetModal(false)}
+                        className="px-5 py-2.5 rounded-xl font-black text-xs text-slate-700 bg-[#EAE3D5] hover:bg-[#DDD3C2] transition-all">
+                        取消
+                      </button>
+                      <button onClick={handleConfirmReset}
+                        className="px-5 py-2.5 rounded-xl font-black text-xs text-white bg-rose-600 hover:bg-rose-500 shadow-md shadow-rose-500/30 transition-all flex items-center gap-2">
+                        <i className="fa-solid fa-rotate-left"></i> 確認重置為 0 分
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Toast Notification */}
+              {toastMsg && (
+                <div className="fixed bottom-6 right-6 z-50 bg-[#2B3848]/95 text-white font-black text-sm px-5 py-3 rounded-2xl shadow-xl border border-slate-700/50 backdrop-blur-md animate-slide-up flex items-center gap-3">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+                  {toastMsg}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -4675,3 +5068,4 @@
 </body>
 
 </html>
+
