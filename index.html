@@ -2603,16 +2603,24 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 2. Active Solid Wave 0 to angle
-        ctx.strokeStyle = '#10B981';
+        // 2. Active Solid Wave 0 to angle (Green above x-axis, Red below x-axis)
         ctx.lineWidth = 3.5;
-        ctx.beginPath();
-        for (let t = 0; t <= angle; t += 0.03) {
-          const gx = ox + t * scaleX;
-          const gy = oy - Math.sin(t) * scaleY;
-          if (t === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+        const step = 0.02;
+        for (let t = 0; t < angle; t += step) {
+          const tNext = Math.min(t + step, angle);
+          const midT = (t + tNext) / 2;
+          const sVal = Math.sin(midT);
+          
+          ctx.strokeStyle = sVal >= 0 ? '#10B981' : '#E11D48';
+          ctx.beginPath();
+          const x1 = ox + t * scaleX;
+          const y1 = oy - Math.sin(t) * scaleY;
+          const x2 = ox + tNext * scaleX;
+          const y2 = oy - Math.sin(tNext) * scaleY;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
         }
-        ctx.stroke();
 
         // 3. Five Key Points on [0, 2pi]
         const keyPts = [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI];
@@ -2620,16 +2628,19 @@
           const kx = ox + pt * scaleX;
           const ky = oy - Math.sin(pt) * scaleY;
           const isPassed = angle >= pt;
-          ctx.fillStyle = isPassed ? '#10B981' : '#94A3B8';
+          const ptSin = Math.sin(pt);
+          const ptColor = ptSin < -0.01 ? '#E11D48' : '#10B981';
+          ctx.fillStyle = isPassed ? ptColor : '#94A3B8';
           ctx.beginPath(); ctx.arc(kx, ky, isPassed ? 4.5 : 3, 0, 2 * Math.PI); ctx.fill();
         });
 
         // 4. Current Point on Wave (gx, gy)
         const curGx = ox + angle * scaleX;
         const curGy = oy - Math.sin(angle) * scaleY;
+        const curSinVal = Math.sin(angle);
 
         // Dynamic Laser Sync Line from Unit Circle P to Wave Point
-        ctx.strokeStyle = 'rgba(197, 155, 99, 0.85)';
+        ctx.strokeStyle = curSinVal >= 0 ? 'rgba(197, 155, 99, 0.85)' : 'rgba(225, 29, 72, 0.75)';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([3, 3]);
         ctx.beginPath();
@@ -2639,22 +2650,23 @@
         ctx.setLineDash([]);
 
         // Vertical drop line to x-axis
-        ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+        ctx.strokeStyle = curSinVal >= 0 ? 'rgba(16, 185, 129, 0.45)' : 'rgba(225, 29, 72, 0.45)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(curGx, oy); ctx.lineTo(curGx, curGy);
         ctx.stroke();
 
         // Wave Current Point Dot
-        ctx.fillStyle = '#C59B63';
+        ctx.fillStyle = curSinVal >= 0 ? '#10B981' : '#E11D48';
         ctx.beginPath(); ctx.arc(curGx, curGy, 6.5, 0, 2 * Math.PI); ctx.fill();
         ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.stroke();
 
         drawCanvasBadge(ctx, `(${angle.toFixed(2)}, ${Math.sin(angle).toFixed(2)})`, curGx, curGy - 18, {
           fontSize: 10,
           fontWeight: 'bold',
-          bgColor: 'rgba(250, 247, 242, 0.95)',
-          borderColor: '#10B981'
+          textColor: curSinVal >= 0 ? '#047857' : '#BE123C',
+          bgColor: curSinVal >= 0 ? 'rgba(236, 253, 245, 0.96)' : 'rgba(255, 241, 242, 0.96)',
+          borderColor: curSinVal >= 0 ? '#10B981' : '#E11D48'
         });
 
         ctx.restore();
