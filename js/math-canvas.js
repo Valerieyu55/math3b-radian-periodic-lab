@@ -335,7 +335,7 @@ const MathCanvas = (function() {
 
     ctx.fillStyle = '#10b981';
     ctx.font = 'bold 15px Fira Code, monospace';
-    ctx.fillText(`面積 A = (1/2)r²θ = ${areaVal}`, panelX, panelY + 80);
+    ctx.fillText(`面積 A = ½ r²θ = ${areaVal}`, panelX, panelY + 80);
 
     const circleFraction = (thetaRad / (2 * Math.PI) * 100).toFixed(1);
     ctx.fillStyle = '#a855f7';
@@ -506,7 +506,7 @@ const MathCanvas = (function() {
 
       // Angle theta = 7.2 deg = pi/25 rad
       ctx.fillStyle = '#10b981';
-      ctx.fillText('θ = 7.2° = π/25 rad', cx + 10, cy - 30);
+      ctx.fillText('θ = 7.2° = 𝛑/25 rad', cx + 10, cy - 30);
     }
   }
 

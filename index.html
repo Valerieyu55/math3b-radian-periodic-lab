@@ -115,13 +115,23 @@
   <script type="text/babel">
     const { useState, useEffect, useRef, useMemo } = React;
 
-    // ── Helper: KaTeX React Inline Component (Zero-Flicker Synchronous Rendering) ──
+    // ── Helper: KaTeX React Inline Component (Zero-Flicker Synchronous Rendering with Vertical Stacked Fractions) ──
     const MathInline = ({ math, display = false, className = '' }) => {
-      const html = useMemo(() => {
+      const formattedMath = useMemo(() => {
         if (!math) return '';
+        let s = String(math);
+        // Automatically upgrade \frac to \dfrac for crisp vertical stacked fractions
+        if (!display && s.includes('\\frac')) {
+          s = s.replace(/\\frac(?![a-zA-Z])/g, '\\dfrac');
+        }
+        return s;
+      }, [math, display]);
+
+      const html = useMemo(() => {
+        if (!formattedMath) return '';
         if (typeof window !== 'undefined' && window.katex && window.katex.renderToString) {
           try {
-            return window.katex.renderToString(String(math), {
+            return window.katex.renderToString(formattedMath, {
               displayMode: display,
               throwOnError: false
             });
@@ -130,28 +140,53 @@
           }
         }
         return '';
-      }, [math, display]);
+      }, [formattedMath, display]);
 
       const containerRef = useRef(null);
 
       useEffect(() => {
-        if (!html && containerRef.current && window.katex) {
+        if (!html && containerRef.current && window.katex && formattedMath) {
           try {
-            katex.render(String(math), containerRef.current, {
+            katex.render(formattedMath, containerRef.current, {
               displayMode: display,
               throwOnError: false
             });
           } catch (e) {
-            containerRef.current.innerText = String(math);
+            containerRef.current.innerText = formattedMath;
           }
         }
-      }, [math, display, html]);
+      }, [formattedMath, display, html]);
 
       if (html) {
         return <span className={`inline-block align-middle ${className}`} dangerouslySetInnerHTML={{ __html: html }} />;
       }
 
-      return <span ref={containerRef} className={`inline-block align-middle ${className}`}>{math}</span>;
+      return <span ref={containerRef} className={`inline-block align-middle ${className}`}>{formattedMath}</span>;
+    };
+
+    // ── Canvas Helper: Vertical Fraction Renderer ──
+    const drawCanvasFraction = (ctx, numStr, denStr, x, y, color = '#64748B') => {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.2;
+      ctx.font = 'bold 10px "Noto Sans TC", "Fira Code", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Numerator
+      ctx.fillText(numStr, x, y - 6);
+      // Horizontal fraction bar
+      const numW = ctx.measureText(numStr).width;
+      const denW = ctx.measureText(denStr).width;
+      const barW = Math.max(numW, denW) + 4;
+      ctx.beginPath();
+      ctx.moveTo(x - barW / 2, y + 0.5);
+      ctx.lineTo(x + barW / 2, y + 0.5);
+      ctx.stroke();
+      // Denominator
+      ctx.fillText(denStr, x, y + 8);
+      ctx.restore();
     };
 
     // ── Global Score Storage ──
@@ -2109,7 +2144,7 @@
                           {idx + 1}
                         </span>
                         <div>
-                          <p className="text-base font-black text-slate-800 leading-relaxed">{q.statement}</p>
+                          <p className="text-base font-black text-slate-800 leading-relaxed">{q.statementNode || q.statement}</p>
                           {!isAnswered && (
                             <span className="inline-block mt-1 text-xs text-slate-500 font-bold">
                               <i className="fa-solid fa-hand-pointer mr-1"></i> 請點選右側按鈕作答
@@ -2569,13 +2604,13 @@
 
         // X Ticks (0, pi/2, pi, 3pi/2, 2pi, 5pi/2, 3pi, 7pi/2, 4pi)
         const ticks = [
-          { val: Math.PI / 2, label: 'π/2' },
+          { val: Math.PI / 2, num: 'π', den: '2' },
           { val: Math.PI, label: 'π' },
-          { val: 3 * Math.PI / 2, label: '3π/2' },
+          { val: 3 * Math.PI / 2, num: '3π', den: '2' },
           { val: 2 * Math.PI, label: '2π' },
-          { val: 5 * Math.PI / 2, label: '5π/2' },
+          { val: 5 * Math.PI / 2, num: '5π', den: '2' },
           { val: 3 * Math.PI, label: '3π' },
-          { val: 7 * Math.PI / 2, label: '7π/2' },
+          { val: 7 * Math.PI / 2, num: '7π', den: '2' },
           { val: 4 * Math.PI, label: '4π' },
         ];
 
@@ -2584,10 +2619,14 @@
           ctx.strokeStyle = 'rgba(203, 213, 225, 0.6)';
           ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(tx, oy - scaleY - 10); ctx.lineTo(tx, oy + scaleY + 10); ctx.stroke();
-          ctx.fillStyle = '#64748B';
-          ctx.font = 'bold 10px Fira Code, monospace';
-          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-          ctx.fillText(t.label, tx, oy + 5);
+          if (t.num && t.den) {
+            drawCanvasFraction(ctx, t.num, t.den, tx, oy + 12, '#64748B');
+          } else {
+            ctx.fillStyle = '#64748B';
+            ctx.font = 'bold 10px Fira Code, monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            ctx.fillText(t.label, tx, oy + 5);
+          }
         });
 
         // 1. Ghost full wave 0 to 4pi (Subtle)
@@ -2676,14 +2715,14 @@
       const sinVal = Math.sin(angle);
       const normRad = angle % (2 * Math.PI);
       
-      let quadText = '第 I 象限';
-      if (normRad > Math.PI / 2 && normRad < Math.PI) quadText = '第 II 象限';
-      else if (normRad > Math.PI && normRad < 3 * Math.PI / 2) quadText = '第 III 象限';
-      else if (normRad > 3 * Math.PI / 2 && normRad < 2 * Math.PI) quadText = '第 IV 象限';
-      else if (Math.abs(normRad - 0) < 0.05 || Math.abs(normRad - 2 * Math.PI) < 0.05) quadText = '正 x 軸 (0 / 2π)';
-      else if (Math.abs(normRad - Math.PI / 2) < 0.05) quadText = '正 y 軸 (π/2)';
-      else if (Math.abs(normRad - Math.PI) < 0.05) quadText = '負 x 軸 (π)';
-      else if (Math.abs(normRad - 3 * Math.PI / 2) < 0.05) quadText = '負 y 軸 (3π/2)';
+      let quadText = <span>第 I 象限</span>;
+      if (normRad > Math.PI / 2 && normRad < Math.PI) quadText = <span>第 II 象限</span>;
+      else if (normRad > Math.PI && normRad < 3 * Math.PI / 2) quadText = <span>第 III 象限</span>;
+      else if (normRad > 3 * Math.PI / 2 && normRad < 2 * Math.PI) quadText = <span>第 IV 象限</span>;
+      else if (Math.abs(normRad - 0) < 0.05 || Math.abs(normRad - 2 * Math.PI) < 0.05) quadText = <span>正 x 軸 (<MathInline math="0 / 2\pi" />)</span>;
+      else if (Math.abs(normRad - Math.PI / 2) < 0.05) quadText = <span>正 y 軸 (<MathInline math="\frac{\pi}{2}" />)</span>;
+      else if (Math.abs(normRad - Math.PI) < 0.05) quadText = <span>負 x 軸 (<MathInline math="\pi" />)</span>;
+      else if (Math.abs(normRad - 3 * Math.PI / 2) < 0.05) quadText = <span>負 y 軸 (<MathInline math="\frac{3\pi}{2}" />)</span>;
 
       let trendText = '函數嚴格遞增 ↗';
       let trendColor = 'text-emerald-700 bg-emerald-50 border-emerald-200';
@@ -3862,6 +3901,9 @@
         },
         {
           id: 'u2_q3',
+          statementNode: (
+            <span>將 <MathInline math="y = \sin x" /> 的圖形向右平移 <MathInline math="\frac{\pi}{3}" /> 單位，所得函數方程式為 <MathInline math="y = \sin\left(x - \frac{\pi}{3}\right)" />。</span>
+          ),
           statement: '將 y = sin x 的圖形向右平移 π/3 單位，所得函數方程式為 y = sin(x - π/3)。',
           correct: true,
           math: 'y = \\sin\\left(x - \\frac{\\pi}{3}\\right)',
@@ -3871,6 +3913,9 @@
         },
         {
           id: 'u2_q4',
+          statementNode: (
+            <span>函數 <MathInline math="y = \sin(2x - \pi)" /> 的圖形是由 <MathInline math="y = \sin(2x)" /> 向右平移 <MathInline math="\pi" /> 單位得到。</span>
+          ),
           statement: '函數 y = sin(2x - π) 的圖形是由 y = sin(2x) 向右平移 π 單位得到。',
           correct: false,
           math: 'y = \\sin(2x - \\pi) = \\sin\\left(2\\left(x - \\frac{\\pi}{2}\\right)\\right)',
@@ -3972,7 +4017,7 @@
                           {idx + 1}
                         </span>
                         <div>
-                          <p className="text-base font-black text-slate-800 leading-relaxed">{q.statement}</p>
+                          <p className="text-base font-black text-slate-800 leading-relaxed">{q.statementNode || q.statement}</p>
                           {!isAnswered && (
                             <span className="inline-block mt-1 text-xs text-slate-500 font-bold">
                               <i className="fa-solid fa-hand-pointer mr-1"></i> 請點選右側按鈕作答
@@ -4302,9 +4347,9 @@
         steps: '1. 點擊快捷角度按鈕 (π/3, 2π/3 等)。 2. 操作螺旋繞轉動畫，展示超越 360° 的旋轉量。'
       },
       'sector': {
-        focus: '體會弧長 s = rθ 與面積 A = 1/2 r² θ 簡潔結構。',
+        focus: <span>體會弧長 <MathInline math="s = r\theta" /> 與面積 <MathInline math="A = \frac{1}{2}r^2\theta" /> 簡潔結構。</span>,
         prompts: '「為什麼弧度制下的扇形面積不需要除以 360°？」',
-        pitfalls: '公式中的 θ 必須以「弧度 (rad)」帶入，若給度數必須先乘以 π/180！',
+        pitfalls: <span>公式中的 <MathInline math="\theta" /> 必須以「弧度 (rad)」帶入，若給度數必須先乘以 <MathInline math="\frac{\pi}{180}" />！</span>,
         steps: '1. 調整半徑 r 與弧度 θ。 2. 觀察弧長與扇形面積數據變化的即時連動。'
       },
       'application': {
@@ -4332,15 +4377,15 @@
         steps: '1. 展開「💡 解題思考方向」。 2. 示範步驟一到步驟三的代數推導。'
       },
       'periodic-sine': {
-        focus: '單位圓繞轉動態投射出正弦波 y = sin(x) 軌跡。',
+        focus: <span>單位圓繞轉動態投射出正弦波 <MathInline math="y = \sin(x)" /> 軌跡。</span>,
         prompts: '「圓周運動的 y 座標與時間 t 繪製出的圖形是什麼形狀？」',
         pitfalls: '注意圖形橫軸是弧度 x（純實數），縱軸是振幅 y（-1 到 +1）。',
         steps: '1. 按下「▶ 播放動態投射」。 2. 觀察圓周紅點與波形紅點的水平連線軌跡。'
       },
       'periodic-transform': {
-        focus: '探索 y = A sin(B(x - C)) + D 四大參數變換。',
-        prompts: '「振幅 A 與週期 T = 2π/B 如何改變圖形特徵？」',
-        pitfalls: '相位平移 C：y = sin(2x - π) 應寫成 y = sin(2(x - π/2))，平移量為 π/2 而非 π！',
+        focus: <span>探索 <MathInline math="y = A\sin(B(x - C)) + D" /> 四大參數變換。</span>,
+        prompts: <span>「振幅 <MathInline math="A" /> 與週期 <MathInline math="T = \frac{2\pi}{B}" /> 如何改變圖形特徵？」</span>,
+        pitfalls: <span>相位平移 C：<MathInline math="y = \sin(2x - \pi)" /> 應寫成 <MathInline math="y = \sin\left(2\left(x - \frac{\pi}{2}\right)\right)" />，平移量為 <MathInline math="\frac{\pi}{2}" /> 而非 <MathInline math="\pi" />！</span>,
         steps: '1. 依序拉動 A, B, C, D 滑桿。 2. 比對基準正弦波 (虛線) 與變換後波形 (實線)。'
       },
       'periodic-models': {
