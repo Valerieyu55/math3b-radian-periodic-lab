@@ -34,6 +34,7 @@ unit2_code = r'''
       const [angle, setAngle] = useState(1.0); // 0 to 4pi
       const [isAnimating, setIsAnimating] = useState(false);
       const [animSpeed, setAnimSpeed] = useState(1);
+      const [freqHz, setFreqHz] = useState(60); // Physics frequency simulator (Hz)
       const canvasRef = useRef(null);
       const animFrameRef = useRef(null);
       const w = 680, h = 380;
@@ -493,6 +494,164 @@ unit2_code = r'''
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            {/* 5 Core Properties & Physics Frequency Lesson Card */}
+            <div className="mt-6 bg-[#FAF7F2] border border-[#DDD3C2] rounded-2xl p-6 shadow-xs space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#DDD3C2]/70 pb-4">
+                <div>
+                  <div className="text-[10px] font-black bg-nordic-light text-nordic border border-nordic-border px-3 py-0.5 rounded-full inline-block mb-1.5 uppercase tracking-widest shadow-xs">
+                    ESSENTIAL MATHEMATICAL & PHYSICS PROPERTIES
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold font-chenyu text-slate-800 flex items-center gap-2">
+                    <i className="fa-solid fa-list-check text-nordic"></i>
+                    正弦函數 <MathInline math="y = \sin x" /> 5 大核心特性與物理頻率
+                  </h3>
+                </div>
+                <span className="text-xs font-black text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-1.5">
+                  <i className="fa-solid fa-bookmark text-amber-500"></i> 高中數學 3B 核心大考焦點
+                </span>
+              </div>
+
+              {/* 5 Properties Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* 1. Definition Domain */}
+                <div className="bg-white p-4.5 rounded-xl border border-slate-200 space-y-2 shadow-xs hover:border-nordic transition-all">
+                  <div className="flex items-center gap-2 text-nordic font-black text-sm border-b border-slate-100 pb-2">
+                    <span className="w-6 h-6 rounded-lg bg-nordic-light text-nordic flex items-center justify-center text-xs font-bold">1</span>
+                    定義域 (Domain)
+                  </div>
+                  <p className="text-xs text-slate-700 font-bold leading-relaxed">
+                    因為對任意實數 <MathInline math="x" />，<MathInline math="\sin x" /> 都有定義，自變數不受角度限制。
+                  </p>
+                  <div className="bg-[#FAF7F2] p-2 rounded-lg border border-[#DDD3C2] text-center font-mono font-bold text-xs text-nordic-dark">
+                    <MathInline math="\text{Domain} = \mathbb{R} = (-\infty, \infty)" />
+                  </div>
+                </div>
+
+                {/* 2. Range */}
+                <div className="bg-white p-4.5 rounded-xl border border-slate-200 space-y-2 shadow-xs hover:border-sage transition-all">
+                  <div className="flex items-center gap-2 text-sage-dark font-black text-sm border-b border-slate-100 pb-2">
+                    <span className="w-6 h-6 rounded-lg bg-sage-light text-sage-dark flex items-center justify-center text-xs font-bold">2</span>
+                    值域 (Range)
+                  </div>
+                  <p className="text-xs text-slate-700 font-bold leading-relaxed">
+                    正弦函數值涵蓋每個在 <MathInline math="-1" /> 與 <MathInline math="1" /> 之間的實數。
+                  </p>
+                  <div className="bg-[#FAF7F2] p-2 rounded-lg border border-[#DDD3C2] text-center font-mono font-bold text-xs text-sage-dark">
+                    <MathInline math="\{y \in \mathbb{R} \mid -1 \le y \le 1\}" />
+                  </div>
+                </div>
+
+                {/* 3. Period */}
+                <div className="bg-white p-4.5 rounded-xl border border-slate-200 space-y-2 shadow-xs hover:border-lavender transition-all">
+                  <div className="flex items-center gap-2 text-lavender-dark font-black text-sm border-b border-slate-100 pb-2">
+                    <span className="w-6 h-6 rounded-lg bg-lavender-light text-lavender-dark flex items-center justify-center text-xs font-bold">3</span>
+                    週期 (Period)
+                  </div>
+                  <p className="text-xs text-slate-700 font-bold leading-relaxed">
+                    由圖形繞圓可知其每隔 <MathInline math="2\pi" /> 弧度完全重複，滿足 <MathInline math="\sin(x + 2\pi) = \sin x" />。
+                  </p>
+                  <div className="bg-[#FAF7F2] p-2 rounded-lg border border-[#DDD3C2] text-center font-mono font-bold text-xs text-lavender-dark">
+                    <MathInline math="\text{Period } T = 2\pi \approx 6.28\text{ rad}" />
+                  </div>
+                </div>
+
+                {/* 4. Amplitude */}
+                <div className="bg-white p-4.5 rounded-xl border border-slate-200 space-y-2 shadow-xs hover:border-caramel transition-all">
+                  <div className="flex items-center gap-2 text-caramel-dark font-black text-sm border-b border-slate-100 pb-2">
+                    <span className="w-6 h-6 rounded-lg bg-caramel-light text-caramel-dark flex items-center justify-center text-xs font-bold">4</span>
+                    振幅 (Amplitude)
+                  </div>
+                  <p className="text-xs text-slate-700 font-bold leading-relaxed">
+                    圖形在 <MathInline math="x" /> 軸上方或下方擺動的最大距離為 1；此時稱振幅為 1。
+                  </p>
+                  <div className="bg-[#FAF7F2] p-2 rounded-lg border border-[#DDD3C2] text-center font-mono font-bold text-xs text-caramel-dark">
+                    <MathInline math="\text{Amplitude } A = \frac{1 - (-1)}{2} = 1" />
+                  </div>
+                </div>
+
+                {/* 5. Symmetry */}
+                <div className="bg-white p-4.5 rounded-xl border border-slate-200 space-y-2 shadow-xs hover:border-terracotta transition-all sm:col-span-2 lg:col-span-2">
+                  <div className="flex items-center gap-2 text-terracotta-dark font-black text-sm border-b border-slate-100 pb-2">
+                    <span className="w-6 h-6 rounded-lg bg-terracotta-light text-terracotta-dark flex items-center justify-center text-xs font-bold">5</span>
+                    對稱性 (Symmetry · 奇函數)
+                  </div>
+                  <p className="text-xs text-slate-700 font-bold leading-relaxed">
+                    由換算公式 <MathInline math="\sin(-x) = -\sin x" /> 知其圖形對稱於座標原點 <MathInline math="(0,0)" />（屬於奇函數 Odd Function）。
+                  </p>
+                  <div className="bg-[#FAF7F2] p-2 rounded-lg border border-[#DDD3C2] text-center font-mono font-bold text-xs text-terracotta-dark">
+                    <MathInline math="\sin(-x) = -\sin x \implies \text{對稱於座標原點 } (0, 0)" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Physics Extension: Frequency & Period Relationship */}
+              <div className="bg-gradient-to-br from-[#24303F] via-[#2D3A4B] to-[#1E2733] text-white rounded-2xl p-5 md:p-6 shadow-md border border-slate-700 space-y-4">
+                <div className="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-lg shrink-0">
+                    <i className="fa-solid fa-wave-square"></i>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block">PHYSICS & ENGINEERING EXTENSION</span>
+                    <h4 className="text-lg md:text-xl font-bold font-chenyu text-white">
+                      跨領域物理延伸：時間自變數與頻率 (Frequency $f = \frac{1}{T}$)
+                    </h4>
+                  </div>
+                </div>
+
+                <p className="text-xs md:text-sm text-slate-200 font-bold leading-relaxed">
+                  值得一提的是：當自變數 <MathInline math="x" /> 的單位為時間 <MathInline math="t" />（秒）時，<strong>頻率（Frequency, $f$）</strong> 表示單位時間內事件重複發生的次數，即為<strong>週期的倒數</strong>。常用的單位為<strong>赫茲（Hz = $\text{s}^{-1}$）</strong>。
+                </p>
+
+                <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                  <div className="p-2.5 bg-slate-900/60 rounded-lg border border-slate-700">
+                    <span className="text-[10px] text-slate-400 font-black block mb-0.5">週期公式 (Period $T$)</span>
+                    <MathInline math="T = \frac{1}{f}\quad\text{(秒 s)}" className="text-amber-300 font-bold text-sm" />
+                  </div>
+                  <div className="p-2.5 bg-slate-900/60 rounded-lg border border-slate-700">
+                    <span className="text-[10px] text-slate-400 font-black block mb-0.5">頻率公式 (Frequency $f$)</span>
+                    <MathInline math="f = \frac{1}{T}\quad\text{(赫茲 Hz)}" className="text-emerald-300 font-bold text-sm" />
+                  </div>
+                  <div className="p-2.5 bg-slate-900/60 rounded-lg border border-slate-700">
+                    <span className="text-[10px] text-slate-400 font-black block mb-0.5">角速度關係 (Angular Speed $\omega$)</span>
+                    <MathInline math="\omega = \frac{2\pi}{T} = 2\pi f" className="text-sky-300 font-bold text-sm" />
+                  </div>
+                </div>
+
+                {/* Interactive Physics Preset Selector */}
+                <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <span className="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                      <i className="fa-solid fa-bolt text-amber-400"></i> 經典真實世界物理頻率對照實作：
+                    </span>
+                    <span className="text-[11px] font-mono text-slate-300 font-bold">
+                      當前頻率 <MathInline math={`f = ${freqHz}\\text{ Hz}`} /> ➔ 週期 <MathInline math={`T = \\frac{1}{${freqHz}} \\approx ${(1/freqHz).toFixed(4)}\\text{ s}`} />
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    {[
+                      { title: '⚡ 台灣家用交流電', hz: 60, desc: '每秒完成 60 次正弦週期 (60 Hz)', periodStr: '1/60 s ≈ 0.0167 s' },
+                      { title: '🎸 鋼琴標準音 A440', hz: 440, desc: '中央 A 音聲波振動頻率 (440 Hz)', periodStr: '1/440 s ≈ 0.00227 s' },
+                      { title: '💓 人體平靜心跳', hz: 1.2, desc: '每分鐘心跳 72 次 (1.2 Hz)', periodStr: '1/1.2 s ≈ 0.833 s (72 bpm)' }
+                    ].map(p => (
+                      <button 
+                        key={p.hz} 
+                        onClick={() => setFreqHz(p.hz)}
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                          freqHz === p.hz 
+                            ? 'bg-amber-500/20 border-amber-400 text-white shadow-sm' 
+                            : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:bg-slate-800'
+                        }`}>
+                        <div className="font-black text-xs text-amber-300 mb-0.5">{p.title}</div>
+                        <div className="text-[11px] font-bold text-slate-200">{p.desc}</div>
+                        <div className="text-[10px] font-mono text-slate-400 mt-1">週期 T = {p.periodStr}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
