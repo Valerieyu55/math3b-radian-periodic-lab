@@ -29,6 +29,280 @@ unit1_code = old_content[tab1_start:practice_end]
 # 5. PeriodicPracticeTab (MODULE 11)
 
 unit2_code = r'''
+    // ── Component: Sine Point-Symmetry Interactive Animation Canvas ──
+    const SineSymmetryCanvas = () => {
+      const [symX, setSymX] = useState(1.2); // x from 0.1 to 2pi
+      const [isRotAnimating, setIsRotAnimating] = useState(false);
+      const [rotDeg, setRotDeg] = useState(0); // 0 to 180 deg
+      const [isSweepAnimating, setIsSweepAnimating] = useState(false);
+      const canvasRef = useRef(null);
+      const rotFrameRef = useRef(null);
+      const sweepFrameRef = useRef(null);
+      const w = 640, h = 320;
+      useRetinaCanvas(canvasRef, w, h);
+
+      // 180 deg Rotation Animation Loop
+      useEffect(() => {
+        if (!isRotAnimating) return;
+        let start = null;
+        const loop = (timestamp) => {
+          if (!start) start = timestamp;
+          const progress = (timestamp - start) / 2200; // 2.2 seconds
+          if (progress <= 1) {
+            setRotDeg(progress * 180);
+            rotFrameRef.current = requestAnimationFrame(loop);
+          } else {
+            setRotDeg(180);
+            setIsRotAnimating(false);
+          }
+        };
+        rotFrameRef.current = requestAnimationFrame(loop);
+        return () => {
+          if (rotFrameRef.current) cancelAnimationFrame(rotFrameRef.current);
+        };
+      }, [isRotAnimating]);
+
+      // Sweep Angle Loop
+      useEffect(() => {
+        if (!isSweepAnimating) return;
+        let lastTime = performance.now();
+        const loop = (now) => {
+          const dt = (now - lastTime) / 1000;
+          lastTime = now;
+          setSymX(prev => {
+            let next = prev + dt * 1.5;
+            if (next > 2 * Math.PI) next = 0.2;
+            return next;
+          });
+          sweepFrameRef.current = requestAnimationFrame(loop);
+        };
+        sweepFrameRef.current = requestAnimationFrame(loop);
+        return () => {
+          if (sweepFrameRef.current) cancelAnimationFrame(sweepFrameRef.current);
+        };
+      }, [isSweepAnimating]);
+
+      // Canvas Rendering
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.clearRect(0, 0, w, h);
+
+        const ox = w / 2, oy = h / 2;
+        const scaleX = (w / 2 - 40) / (2.2 * Math.PI); // px per rad
+        const scaleY = 90; // 1 unit = 90px
+
+        // Grid Lines
+        ctx.strokeStyle = 'rgba(221, 211, 194, 0.4)';
+        ctx.lineWidth = 1;
+        for (let x = 20; x < w; x += 30) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = 20; y < h; y += 30) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+
+        // Axes
+        ctx.strokeStyle = '#64748B';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(20, oy); ctx.lineTo(w - 20, oy); // X Axis
+        ctx.moveTo(ox, 20); ctx.lineTo(ox, h - 20); // Y Axis
+        ctx.stroke();
+
+        ctx.fillStyle = '#64748B';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.fillText('x (rad)', w - 40, oy + 16);
+        ctx.fillText('y', ox + 10, 18);
+
+        // Origin Glow & Label
+        ctx.fillStyle = '#C59B63';
+        ctx.beginPath(); ctx.arc(ox, oy, 5, 0, 2 * Math.PI); ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.stroke();
+        drawCanvasBadge(ctx, '(0,0) 原點', ox, oy + 18, {
+          fontSize: 9,
+          bgColor: 'rgba(250, 247, 242, 0.95)',
+          borderColor: '#C59B63',
+          textColor: '#78350F'
+        });
+
+        // Base Sine Wave y = sin x (-2pi to +2pi)
+        ctx.strokeStyle = 'rgba(78, 114, 146, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let t = -2 * Math.PI; t <= 2 * Math.PI; t += 0.04) {
+          const gx = ox + t * scaleX;
+          const gy = oy - Math.sin(t) * scaleY;
+          if (t === -2 * Math.PI) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+        }
+        ctx.stroke();
+
+        // 180° Rotated Wave Overlay (if rotDeg > 0)
+        if (rotDeg > 0) {
+          const rotRad = (rotDeg * Math.PI) / 180;
+          ctx.strokeStyle = '#9333EA';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          for (let t = -2 * Math.PI; t <= 2 * Math.PI; t += 0.04) {
+            const rawX = t * scaleX;
+            const rawY = -Math.sin(t) * scaleY;
+            // Rotate (rawX, rawY) around (0,0) by rotRad
+            const rx = rawX * Math.cos(rotRad) - rawY * Math.sin(rotRad);
+            const ry = rawX * Math.sin(rotRad) + rawY * Math.cos(rotRad);
+            const gx = ox + rx;
+            const gy = oy + ry;
+            if (t === -2 * Math.PI) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+          }
+          ctx.stroke();
+
+          // Rotation Angle Arc Indicator around Origin
+          ctx.strokeStyle = '#9333EA';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(ox, oy, 28, 0, rotRad, false);
+          ctx.stroke();
+
+          drawCanvasBadge(ctx, `180° 旋轉角: ${rotDeg.toFixed(0)}°`, ox, oy - 28, {
+            fontSize: 10,
+            bgColor: 'rgba(243, 232, 255, 0.96)',
+            borderColor: '#9333EA',
+            textColor: '#6B21A8'
+          });
+        }
+
+        // Active Symmetry Pair: P(x, sin x) and P'(-x, sin(-x))
+        const p1x = ox + symX * scaleX;
+        const p1y = oy - Math.sin(symX) * scaleY;
+
+        const p2x = ox - symX * scaleX;
+        const p2y = oy - Math.sin(-symX) * scaleY; // = oy + sin(symX) * scaleY
+
+        // Line connecting P and P' passing through origin (0,0)
+        ctx.strokeStyle = '#D97706';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(p1x, p1y);
+        ctx.lineTo(p2x, p2y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vertical drop lines to x-axis
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(p1x, oy); ctx.lineTo(p1x, p1y); ctx.stroke();
+        ctx.strokeStyle = 'rgba(225, 29, 72, 0.4)';
+        ctx.beginPath(); ctx.moveTo(p2x, oy); ctx.lineTo(p2x, p2y); ctx.stroke();
+
+        // Point P (Positive x) - Green
+        ctx.fillStyle = '#10B981';
+        ctx.beginPath(); ctx.arc(p1x, p1y, 6.5, 0, 2 * Math.PI); ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.stroke();
+        drawCanvasBadge(ctx, `P(${symX.toFixed(2)}, ${Math.sin(symX).toFixed(2)})`, p1x, p1y - 18, {
+          fontSize: 10,
+          fontWeight: 'bold',
+          textColor: '#047857',
+          bgColor: 'rgba(236, 253, 245, 0.96)',
+          borderColor: '#10B981'
+        });
+
+        // Point P' (Negative -x) - Red
+        ctx.fillStyle = '#E11D48';
+        ctx.beginPath(); ctx.arc(p2x, p2y, 6.5, 0, 2 * Math.PI); ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.stroke();
+        drawCanvasBadge(ctx, `P'(-${symX.toFixed(2)}, ${Math.sin(-symX).toFixed(2)})`, p2x, p2y + 20, {
+          fontSize: 10,
+          fontWeight: 'bold',
+          textColor: '#BE123C',
+          bgColor: 'rgba(255, 241, 242, 0.96)',
+          borderColor: '#E11D48'
+        });
+
+        ctx.restore();
+      }, [symX, rotDeg]);
+
+      const sinPositive = Math.sin(symX);
+      const sinNegative = Math.sin(-symX);
+
+      return (
+        <div className="bg-[#FAF7F2] p-5 rounded-2xl border border-[#DDD3C2] shadow-xs space-y-4 mt-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#DDD3C2]/70 pb-3">
+            <div>
+              <span className="text-[10px] font-black text-terracotta uppercase tracking-widest block">POINT SYMMETRY ANIMATION WORKBENCH</span>
+              <h4 className="text-base md:text-lg font-bold font-chenyu text-slate-800 flex items-center gap-2">
+                <i className="fa-solid fa-arrows-to-circle text-terracotta"></i>
+                奇函數對稱性動態演示實驗室：<MathInline math="\sin(-x) = -\sin x" />
+              </h4>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <button 
+                onClick={() => { setRotDeg(0); setIsRotAnimating(true); setIsSweepAnimating(false); }}
+                className="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl text-xs font-black transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                <i className="fa-solid fa-rotate text-xs"></i> ▶ 播放 180° 原點繞轉重合動畫
+              </button>
+              <button 
+                onClick={() => { setIsSweepAnimating(prev => !prev); setIsRotAnimating(false); }}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all shadow-xs flex items-center gap-1.5 cursor-pointer ${
+                  isSweepAnimating 
+                    ? 'bg-amber-500 text-white border border-amber-600' 
+                    : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-100'
+                }`}>
+                <i className={`fa-solid ${isSweepAnimating ? 'fa-pause' : 'fa-play'} text-xs`}></i>
+                {isSweepAnimating ? '暫停對稱掃描' : '連續點對稱掃描 (Sweep x)'}
+              </button>
+            </div>
+          </div>
+
+          {/* Canvas Display */}
+          <div className="canvas-stage-card p-3 flex flex-col items-center justify-center relative overflow-hidden bg-white rounded-xl border border-slate-200">
+            <canvas ref={canvasRef} className="max-w-full h-auto rounded-lg" />
+          </div>
+
+          {/* Real-time Math Verification Box */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-[#A7F3D0] p-3.5 rounded-xl text-center shadow-xs">
+              <span className="text-[10px] font-black text-emerald-700 block mb-0.5">正角度點 P (x, sin x)</span>
+              <div className="text-sm font-black text-emerald-900 font-mono">
+                <MathInline math={`P(${symX.toFixed(2)}, ${sinPositive.toFixed(3)})`} />
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#FFF1F2] to-[#FFE4E6] border border-[#FECDD3] p-3.5 rounded-xl text-center shadow-xs">
+              <span className="text-[10px] font-black text-rose-700 block mb-0.5">負角度點 P' (-x, sin(-x))</span>
+              <div className="text-sm font-black text-rose-900 font-mono">
+                <MathInline math={`P'(-${symX.toFixed(2)}, ${sinNegative.toFixed(3)})`} />
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] border border-[#FCD34D] p-3.5 rounded-xl text-center shadow-xs">
+              <span className="text-[10px] font-black text-amber-800 block mb-0.5">原點中點關聯式 (Point Symmetry)</span>
+              <div className="text-xs font-black text-amber-900 font-mono mt-0.5">
+                <MathInline math={`\\sin(-${symX.toFixed(2)}) = -(\\sin(${symX.toFixed(2)})) = ${sinNegative.toFixed(3)}`} />
+              </div>
+            </div>
+          </div>
+
+          {/* Angle Control Slider */}
+          <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+            <div className="flex justify-between items-center text-xs font-bold">
+              <span className="text-slate-700 flex items-center gap-1.5">
+                <i className="fa-solid fa-sliders text-terracotta"></i> 拖曳測試原點對稱角度 <MathInline math="x" /> (0 ~ 2π rad)
+              </span>
+              <span className="font-mono bg-[#FAF7F2] px-2.5 py-0.5 rounded border border-[#DDD3C2] text-slate-800 font-black">
+                x = {symX.toFixed(2)} rad ({(symX * 180 / Math.PI).toFixed(1)}°)
+              </span>
+            </div>
+            <input 
+              type="range" min="0.1" max={2 * Math.PI} step="0.02" value={symX}
+              onChange={(e) => { setIsSweepAnimating(false); setSymX(parseFloat(e.target.value)); }}
+              className="w-full accent-terracotta h-2 bg-[#DDD3C2] rounded-lg cursor-pointer" />
+          </div>
+        </div>
+      );
+    };
+
     // ── TAB 8 (UNIT 02 - MODULE 07): 單位圓與正弦波生成實驗室 ──
     const PeriodicSineTab = () => {
       const [angle, setAngle] = useState(1.0); // 0 to 4pi
@@ -584,6 +858,9 @@ unit2_code = r'''
                   <div className="bg-[#FAF7F2] p-2 rounded-lg border border-[#DDD3C2] text-center font-mono font-bold text-xs text-terracotta-dark">
                     <MathInline math="\sin(-x) = -\sin x \implies \text{對稱於座標原點 } (0, 0)" />
                   </div>
+
+                  {/* Interactive Symmetry Animation Canvas Workbench */}
+                  <SineSymmetryCanvas />
                 </div>
               </div>
 
