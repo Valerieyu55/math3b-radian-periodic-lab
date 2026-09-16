@@ -596,13 +596,13 @@ unit2_code = r'''
                   <div>
                     <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block">PHYSICS & ENGINEERING EXTENSION</span>
                     <h4 className="text-lg md:text-xl font-bold font-chenyu text-white">
-                      跨領域物理延伸：時間自變數與頻率 (Frequency $f = \frac{1}{T}$)
+                      跨領域物理延伸：時間自變數與頻率 (Frequency <MathInline math="f = \frac{1}{T}" />)
                     </h4>
                   </div>
                 </div>
 
                 <p className="text-xs md:text-sm text-slate-200 font-bold leading-relaxed">
-                  值得一提的是：當自變數 <MathInline math="x" /> 的單位為時間 <MathInline math="t" />（秒）時，<strong>頻率（Frequency, $f$）</strong> 表示單位時間內事件重複發生的次數，即為<strong>週期的倒數</strong>。常用的單位為<strong>赫茲（Hz = $\text{s}^{-1}$）</strong>。
+                  值得一提的是：當自變數 <MathInline math="x" /> 的單位為時間 <MathInline math="t" />（秒）時，<strong>頻率（Frequency, <MathInline math="f" />）</strong> 表示單位時間內事件重複發生的次數，即為<strong>週期的倒數</strong>。常用的單位為<strong>赫茲（Hz = <MathInline math="\text{s}^{-1}" />）</strong>。
                 </p>
 
                 <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
