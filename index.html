@@ -2955,8 +2955,14 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Vertical Sine Projection (Pure textbook RED line segment, as in Image 3)
-        ctx.strokeStyle = '#DC2626';
+        // Vertical Sine Projection (GREEN when y >= 0, RED when y < 0)
+        const isPositiveY = Math.sin(normAngle) >= 0;
+        const projColor = isPositiveY ? '#10B981' : '#E11D48';
+        const projTextColor = isPositiveY ? '#047857' : '#BE123C';
+        const projBgColor = isPositiveY ? 'rgba(236, 253, 245, 0.95)' : 'rgba(254, 242, 242, 0.95)';
+        const projBorderColor = isPositiveY ? '#A7F3D0' : '#FECACA';
+
+        ctx.strokeStyle = projColor;
         ctx.lineWidth = 3.5;
         ctx.beginPath();
         ctx.moveTo(px, cy); ctx.lineTo(px, py);
@@ -2967,7 +2973,7 @@
           const sq = 5;
           const sgnX = Math.cos(normAngle) >= 0 ? -1 : 1;
           const sgnY = Math.sin(normAngle) >= 0 ? -1 : 1;
-          ctx.strokeStyle = '#DC2626';
+          ctx.strokeStyle = projColor;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(px + sgnX * sq, cy);
@@ -2978,7 +2984,7 @@
 
         // Vertical label sin θ beside vertical segment
         if (Math.abs(py - cy) > 14) {
-          ctx.fillStyle = '#DC2626';
+          ctx.fillStyle = projTextColor;
           ctx.font = 'bold 10px Nunito, sans-serif';
           ctx.textAlign = Math.cos(normAngle) >= 0 ? 'left' : 'right';
           ctx.textBaseline = 'middle';
@@ -2987,16 +2993,16 @@
         }
 
         // Point P Dot
-        ctx.fillStyle = '#DC2626';
+        ctx.fillStyle = projColor;
         ctx.beginPath(); ctx.arc(px, py, 5.5, 0, 2 * Math.PI); ctx.fill();
         ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.stroke();
 
         // Badge at Unit Circle P(cos θ, sin θ)
         drawCanvasBadge(ctx, `P(cos θ, sin θ)`, px, py - 18, {
           fontSize: 9.5,
-          textColor: '#DC2626',
-          bgColor: 'rgba(254, 242, 242, 0.95)',
-          borderColor: '#FECACA'
+          textColor: projTextColor,
+          bgColor: projBgColor,
+          borderColor: projBorderColor
         });
 
         // ── RIGHT: Cartesian Wave Graph y = sin x ──
@@ -3141,8 +3147,8 @@
         const curGy = oy - Math.sin(angle) * scaleY;
         const curSinVal = Math.sin(angle);
 
-        // Dynamic Laser Sync Line from Unit Circle P to Wave Point
-        ctx.strokeStyle = 'rgba(220, 38, 38, 0.75)';
+        // Dynamic Laser Sync Line from Unit Circle P to Wave Point (Green if y >= 0, Red if y < 0)
+        ctx.strokeStyle = (Math.sin(normAngle) >= 0) ? 'rgba(16, 185, 129, 0.75)' : 'rgba(225, 29, 72, 0.75)';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([3, 3]);
         ctx.beginPath();
@@ -3315,16 +3321,16 @@
                         <path d="M 85 70 A 15 15 0 0 0 79 57.5" fill="none" stroke="#C59B63" strokeWidth="1.5" />
                         <text x="86" y="63" fontSize="7" fill="#C59B63" fontWeight="bold">θ</text>
 
-                        {/* Vertical Red Segment: sin theta */}
-                        <line x1="96.4" y1="70" x2="96.4" y2="32.3" stroke="#DC2626" strokeWidth="3" />
-                        <text x="100" y="55" fontSize="7" fill="#DC2626" fontWeight="bold">sin θ</text>
+                        {/* Vertical Green Segment: sin theta in Quadrant I (y > 0) */}
+                        <line x1="96.4" y1="70" x2="96.4" y2="32.3" stroke="#10B981" strokeWidth="3" />
+                        <text x="100" y="55" fontSize="7" fill="#047857" fontWeight="black">sin θ</text>
 
                         {/* Right-angle mark */}
-                        <polyline points="91.4,70 91.4,65 96.4,65" fill="none" stroke="#DC2626" strokeWidth="1" />
+                        <polyline points="91.4,70 91.4,65 96.4,65" fill="none" stroke="#10B981" strokeWidth="1" />
 
                         {/* Point P */}
-                        <circle cx="96.4" cy="32.3" r="3.5" fill="#DC2626" stroke="#FFFFFF" strokeWidth="1.5" />
-                        <text x="96" y="27" fontSize="7" fill="#DC2626" fontWeight="bold" textAnchor="middle">P(cosθ, sinθ)</text>
+                        <circle cx="96.4" cy="32.3" r="3.5" fill="#10B981" stroke="#FFFFFF" strokeWidth="1.5" />
+                        <text x="96" y="27" fontSize="7" fill="#047857" fontWeight="bold" textAnchor="middle">P(cosθ, sinθ)</text>
                       </svg>
                     </div>
 
@@ -3336,15 +3342,18 @@
                       <p className="leading-relaxed">
                         終邊交單位圓於 <MathInline math="P(\cos\theta, \sin\theta)" />，半徑為 1，因此：
                       </p>
-                      <div className="bg-rose-50 border border-rose-200 text-rose-800 font-black p-2 rounded-lg text-center font-mono">
+                      <div className="bg-gradient-to-r from-emerald-50 via-slate-50 to-rose-50 border border-slate-200 text-slate-800 font-black p-2 rounded-lg text-center font-mono">
                         <MathInline math="\sin\theta = P \text{ 點的 } y \text{ 坐標（鉛直高度投影）}" />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-[11px] font-bold text-slate-600 flex items-center justify-between">
-                  <span><i className="fa-solid fa-arrows-up-down text-rose-600 mr-1"></i> 紅色線段表示鉛直高度投影</span>
-                  <span className="font-mono text-rose-700 font-black">第 I, II 象限 y &gt; 0 ｜ 第 III, IV 象限 y &lt; 0</span>
+                  <span><i className="fa-solid fa-arrows-up-down text-emerald-600 mr-1"></i> 線段顏色表示鉛直高度正負</span>
+                  <span className="font-mono font-black">
+                    <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 mr-1.5">y ≥ 0 為綠色 ↗</span>
+                    <span className="text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">y &lt; 0 為紅色 ↘</span>
+                  </span>
                 </div>
               </div>
             </div>
