@@ -320,6 +320,112 @@ unit2_code = r'''
       { label: '2π', val: 2 * Math.PI, deg: '360°', xLatex: '2\\pi', yLatex: '0', yVal: 0, approx: '0', note: '完成一週期' }
     ];
 
+    // ── Target Y-Coordinate Options for Inverse Angle Solving (例如 y = 1/2) ──
+    const yTargetOptions = [
+      { 
+        id: '1', 
+        label: 'y = 1', 
+        math: 'y = 1', 
+        val: 1, 
+        approx: '1.0', 
+        tag: '波峰極大',
+        angles: [
+          { rad: Math.PI / 2, label: 'π/2', math: '\\frac{\\pi}{2}', deg: '90°', quad: '正 y 軸' }
+        ]
+      },
+      { 
+        id: 'sqrt3_2', 
+        label: 'y = √3/2', 
+        math: 'y = \\frac{\\sqrt{3}}{2}', 
+        val: Math.sqrt(3) / 2, 
+        approx: '≈ 0.866', 
+        angles: [
+          { rad: Math.PI / 3, label: 'π/3', math: '\\frac{\\pi}{3}', deg: '60°', quad: '第 I 象限' },
+          { rad: 2 * Math.PI / 3, label: '2π/3', math: '\\frac{2\\pi}{3}', deg: '120°', quad: '第 II 象限' }
+        ]
+      },
+      { 
+        id: 'sqrt2_2', 
+        label: 'y = √2/2', 
+        math: 'y = \\frac{\\sqrt{2}}{2}', 
+        val: Math.SQRT2 / 2, 
+        approx: '≈ 0.707', 
+        angles: [
+          { rad: Math.PI / 4, label: 'π/4', math: '\\frac{\\pi}{4}', deg: '45°', quad: '第 I 象限' },
+          { rad: 3 * Math.PI / 4, label: '3π/4', math: '\\frac{3\\pi}{4}', deg: '135°', quad: '第 II 象限' }
+        ]
+      },
+      { 
+        id: '1_2', 
+        label: 'y = 1/2', 
+        math: 'y = \\frac{1}{2}', 
+        val: 0.5, 
+        approx: '0.50', 
+        tag: '課本重點',
+        angles: [
+          { rad: Math.PI / 6, label: 'π/6', math: '\\frac{\\pi}{6}', deg: '30°', quad: '第 I 象限' },
+          { rad: 5 * Math.PI / 6, label: '5π/6', math: '\\frac{5\\pi}{6}', deg: '150°', quad: '第 II 象限' }
+        ]
+      },
+      { 
+        id: '0', 
+        label: 'y = 0', 
+        math: 'y = 0', 
+        val: 0, 
+        approx: '0.0', 
+        tag: '平衡中線',
+        angles: [
+          { rad: 0, label: '0', math: '0', deg: '0°', quad: '正 x 軸' },
+          { rad: Math.PI, label: 'π', math: '\\pi', deg: '180°', quad: '負 x 軸' },
+          { rad: 2 * Math.PI, label: '2π', math: '2\\pi', deg: '360°', quad: '完成週期' }
+        ]
+      },
+      { 
+        id: 'neg_1_2', 
+        label: 'y = -1/2', 
+        math: 'y = -\\frac{1}{2}', 
+        val: -0.5, 
+        approx: '-0.50', 
+        angles: [
+          { rad: 7 * Math.PI / 6, label: '7π/6', math: '\\frac{7\\pi}{6}', deg: '210°', quad: '第 III 象限' },
+          { rad: 11 * Math.PI / 6, label: '11π/6', math: '\\frac{11\\pi}{6}', deg: '330°', quad: '第 IV 象限' }
+        ]
+      },
+      { 
+        id: 'neg_sqrt2_2', 
+        label: 'y = -√2/2', 
+        math: 'y = -\\frac{\\sqrt{2}}{2}', 
+        val: -Math.SQRT2 / 2, 
+        approx: '≈ -0.707', 
+        angles: [
+          { rad: 5 * Math.PI / 4, label: '5π/4', math: '\\frac{5\\pi}{4}', deg: '225°', quad: '第 III 象限' },
+          { rad: 7 * Math.PI / 4, label: '7π/4', math: '\\frac{7\\pi}{4}', deg: '315°', quad: '第 IV 象限' }
+        ]
+      },
+      { 
+        id: 'neg_sqrt3_2', 
+        label: 'y = -√3/2', 
+        math: 'y = -\\frac{\\sqrt{3}}{2}', 
+        val: -Math.sqrt(3) / 2, 
+        approx: '≈ -0.866', 
+        angles: [
+          { rad: 4 * Math.PI / 3, label: '4π/3', math: '\\frac{4\\pi}{3}', deg: '240°', quad: '第 III 象限' },
+          { rad: 5 * Math.PI / 3, label: '5π/3', math: '\\frac{5\\pi}{3}', deg: '300°', quad: '第 IV 象限' }
+        ]
+      },
+      { 
+        id: 'neg_1', 
+        label: 'y = -1', 
+        math: 'y = -1', 
+        val: -1, 
+        approx: '-1.0', 
+        tag: '波谷極小',
+        angles: [
+          { rad: 3 * Math.PI / 2, label: '3π/2', math: '\\frac{3\\pi}{2}', deg: '270°', quad: '負 y 軸' }
+        ]
+      }
+    ];
+
     // ── TAB 8 (UNIT 02 - MODULE 07): 單位圓與正弦波生成實驗室 ──
     const PeriodicSineTab = () => {
       const [angle, setAngle] = useState(1.0); // 0 to 4pi
@@ -330,6 +436,10 @@ unit2_code = r'''
       const [showSmoothCurve, setShowSmoothCurve] = useState(true); // Whether to connect dots with smooth curve
       const [isStepAnimating, setIsStepAnimating] = useState(false); // Auto step-by-step plotting
       const [selectedPointIndex, setSelectedPointIndex] = useState(null); // Highlighting table point
+      const [selectedYTarget, setSelectedYTarget] = useState(null); // Target Y-coordinate selection (e.g. y = 1/2)
+      const [customMax, setCustomMax] = useState(1); // Sandbox Max value
+      const [customMin, setCustomMin] = useState(-1); // Sandbox Min value
+      const [customUnit, setCustomUnit] = useState(''); // Sandbox Unit
       const canvasRef = useRef(null);
       const animFrameRef = useRef(null);
       const w = 680, h = 380;
@@ -424,6 +534,27 @@ unit2_code = r'''
         if (plottedCount <= idx) {
           setPlottedCount(idx + 1);
         }
+      };
+
+      const handleSelectYTarget = (target) => {
+        setIsAnimating(false);
+        setIsStepAnimating(false);
+        if (selectedYTarget && selectedYTarget.id === target.id) {
+          // Cycle through angles of this Y target
+          const curNorm = angle % (2 * Math.PI);
+          const curIdx = target.angles.findIndex(a => Math.abs(a.rad - curNorm) < 0.05);
+          const nextIdx = (curIdx + 1) % target.angles.length;
+          setAngle(target.angles[nextIdx].rad);
+        } else {
+          setSelectedYTarget(target);
+          setAngle(target.angles[0].rad);
+        }
+      };
+
+      const handleJumpToYAngle = (rad) => {
+        setIsAnimating(false);
+        setIsStepAnimating(false);
+        setAngle(rad);
       };
 
       // Canvas Rendering
@@ -775,8 +906,135 @@ unit2_code = r'''
           borderColor: curSinVal >= 0 ? '#10B981' : '#E11D48'
         });
 
+        // ── Midline & Amplitude Dimension Markers on Cartesian Wave ──
+        // 1. Midline Label at horizontal axis
+        drawCanvasBadge(ctx, '平衡中線 y = 0', ox + graphW - 48, oy - 12, {
+          fontSize: 9.5,
+          fontWeight: 'bold',
+          textColor: '#78350F',
+          bgColor: 'rgba(254, 243, 199, 0.95)',
+          borderColor: '#FDE68A'
+        });
+
+        // 2. Amplitude Dimension Marker at Peak (x = pi/2)
+        const peakX = ox + (Math.PI / 2) * scaleX;
+        const peakY = oy - scaleY;
+        ctx.strokeStyle = '#10B981';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(peakX - 16, oy);
+        ctx.lineTo(peakX - 16, peakY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Tick caps
+        ctx.beginPath();
+        ctx.moveTo(peakX - 20, oy); ctx.lineTo(peakX - 12, oy);
+        ctx.moveTo(peakX - 20, peakY); ctx.lineTo(peakX - 12, peakY);
+        ctx.stroke();
+        // Amplitude Badge
+        drawCanvasBadge(ctx, '振幅 A = 1', peakX - 24, oy - scaleY / 2, {
+          fontSize: 9,
+          fontWeight: 'bold',
+          textColor: '#047857',
+          bgColor: 'rgba(236, 253, 245, 0.95)',
+          borderColor: '#A7F3D0'
+        });
+
+        // 3. Amplitude Dimension Marker at Trough (x = 3pi/2)
+        const troughX = ox + (3 * Math.PI / 2) * scaleX;
+        const troughY = oy + scaleY;
+        ctx.strokeStyle = '#E11D48';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(troughX - 16, oy);
+        ctx.lineTo(troughX - 16, troughY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Tick caps
+        ctx.beginPath();
+        ctx.moveTo(troughX - 20, oy); ctx.lineTo(troughX - 12, oy);
+        ctx.moveTo(troughX - 20, troughY); ctx.lineTo(troughX - 12, troughY);
+        ctx.stroke();
+        // Amplitude Badge
+        drawCanvasBadge(ctx, '振幅 A = 1', troughX - 24, oy + scaleY / 2, {
+          fontSize: 9,
+          fontWeight: 'bold',
+          textColor: '#BE123C',
+          bgColor: 'rgba(255, 241, 242, 0.95)',
+          borderColor: '#FECACA'
+        });
+
+        // ── Target Y-Coordinate Horizontal Guideline & Intersections ──
+        if (selectedYTarget) {
+          const targetYVal = selectedYTarget.val;
+          const targetYPx = oy - targetYVal * scaleY;
+          const isTargetPos = targetYVal >= 0;
+
+          // Horizontal Guideline from Unit Circle across to Wave Graph
+          ctx.strokeStyle = isTargetPos ? '#10B981' : '#E11D48';
+          ctx.lineWidth = 1.8;
+          ctx.setLineDash([4, 3]);
+          ctx.beginPath();
+          ctx.moveTo(25, targetYPx);
+          ctx.lineTo(ox + graphW + 15, targetYPx);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Right Guideline Badge
+          drawCanvasBadge(ctx, `目標線 ${selectedYTarget.label}`, ox + graphW - 52, targetYPx - 13, {
+            fontSize: 9.5,
+            fontWeight: 'bold',
+            textColor: isTargetPos ? '#047857' : '#BE123C',
+            bgColor: isTargetPos ? 'rgba(236, 253, 245, 0.96)' : 'rgba(254, 242, 242, 0.96)',
+            borderColor: isTargetPos ? '#10B981' : '#E11D48'
+          });
+
+          // Intersection Points on Unit Circle (if |y| <= 1)
+          if (Math.abs(targetYVal) <= 1) {
+            const u = Math.sqrt(Math.max(0, 1 - targetYVal * targetYVal));
+            const p1x = cx + u * R;
+            const p2x = cx - u * R;
+
+            [p1x, p2x].forEach((intX) => {
+              ctx.strokeStyle = isTargetPos ? 'rgba(16, 185, 129, 0.35)' : 'rgba(225, 29, 72, 0.35)';
+              ctx.lineWidth = 5;
+              ctx.beginPath(); ctx.arc(intX, targetYPx, 7, 0, 2 * Math.PI); ctx.stroke();
+              ctx.fillStyle = isTargetPos ? '#10B981' : '#E11D48';
+              ctx.beginPath(); ctx.arc(intX, targetYPx, 4, 0, 2 * Math.PI); ctx.fill();
+              ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5; ctx.stroke();
+            });
+          }
+
+          // Intersection Points on Cartesian Wave Graph
+          selectedYTarget.angles.forEach((ang) => {
+            [ang.rad, ang.rad + 2 * Math.PI].forEach((rx) => {
+              if (rx <= 4 * Math.PI + 0.05) {
+                const ix = ox + rx * scaleX;
+                ctx.strokeStyle = isTargetPos ? 'rgba(16, 185, 129, 0.35)' : 'rgba(225, 29, 72, 0.35)';
+                ctx.lineWidth = 6;
+                ctx.beginPath(); ctx.arc(ix, targetYPx, 8, 0, 2 * Math.PI); ctx.stroke();
+                ctx.fillStyle = isTargetPos ? '#10B981' : '#E11D48';
+                ctx.beginPath(); ctx.arc(ix, targetYPx, 5, 0, 2 * Math.PI); ctx.fill();
+                ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                if (rx <= 2 * Math.PI + 0.05) {
+                  drawCanvasBadge(ctx, `(${ang.label}, ${selectedYTarget.label})`, ix, targetYPx - 15, {
+                    fontSize: 9,
+                    fontWeight: 'bold',
+                    textColor: isTargetPos ? '#047857' : '#BE123C',
+                    bgColor: isTargetPos ? 'rgba(236, 253, 245, 0.96)' : 'rgba(254, 242, 242, 0.96)',
+                    borderColor: isTargetPos ? '#10B981' : '#E11D48'
+                  });
+                }
+              }
+            });
+          });
+        }
+
         ctx.restore();
-      }, [angle, plottedCount, showSmoothCurve, selectedPointIndex]);
+      }, [angle, plottedCount, showSmoothCurve, selectedPointIndex, selectedYTarget]);
 
       const deg = (angle * 180 / Math.PI).toFixed(1);
       const sinVal = Math.sin(angle);
@@ -989,23 +1247,121 @@ unit2_code = r'''
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-black text-slate-500 mr-1">快速定位:</span>
-                  {[
-                    { label: '0', val: 0 },
-                    { label: 'π/6', math: '\\frac{\\pi}{6}', val: Math.PI / 6 },
-                    { label: 'π/4', math: '\\frac{\\pi}{4}', val: Math.PI / 4 },
-                    { label: 'π/3', math: '\\frac{\\pi}{3}', val: Math.PI / 3 },
-                    { label: 'π/2', math: '\\frac{\\pi}{2}', val: Math.PI / 2 },
-                    { label: 'π', math: '\\pi', val: Math.PI },
-                    { label: '3π/2', math: '\\frac{3\\pi}{2}', val: 3 * Math.PI / 2 },
-                    { label: '2π', math: '2\\pi', val: 2 * Math.PI },
-                  ].map((btn, i) => (
-                    <button key={i} onClick={() => { setIsAnimating(false); setIsStepAnimating(false); setAngle(btn.val); }}
-                      className="px-2.5 py-1 bg-[#FAF7F2] hover:bg-[#EFE8DC] border border-[#DDD3C2] text-slate-700 font-black rounded-lg text-xs transition-all shadow-xs">
-                      {btn.math ? <MathInline math={btn.math} /> : btn.label}
-                    </button>
-                  ))}
+                {/* Dual-Dimension Quick Positioning: Radian x & Height y-coordinate */}
+                <div className="w-full space-y-2.5 pt-2 border-t border-[#DDD3C2]/50">
+                  {/* Row 1: By Radian Angle x */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-black text-slate-600 mr-1 flex items-center gap-1 shrink-0">
+                      <i className="fa-solid fa-compass text-nordic text-xs"></i> 快速定位 (弧度 x):
+                    </span>
+                    {[
+                      { label: '0', val: 0 },
+                      { label: 'π/6', math: '\\frac{\\pi}{6}', val: Math.PI / 6 },
+                      { label: 'π/4', math: '\\frac{\\pi}{4}', val: Math.PI / 4 },
+                      { label: 'π/3', math: '\\frac{\\pi}{3}', val: Math.PI / 3 },
+                      { label: 'π/2', math: '\\frac{\\pi}{2}', val: Math.PI / 2 },
+                      { label: '2π/3', math: '\\frac{2\\pi}{3}', val: 2 * Math.PI / 3 },
+                      { label: '3π/4', math: '\\frac{3\\pi}{4}', val: 3 * Math.PI / 4 },
+                      { label: '5π/6', math: '\\frac{5\\pi}{6}', val: 5 * Math.PI / 6 },
+                      { label: 'π', math: '\\pi', val: Math.PI },
+                      { label: '3π/2', math: '\\frac{3\\pi}{2}', val: 3 * Math.PI / 2 },
+                      { label: '2π', math: '2\\pi', val: 2 * Math.PI },
+                    ].map((btn, i) => {
+                      const isCur = Math.abs((angle % (2 * Math.PI)) - btn.val) < 0.03;
+                      return (
+                        <button key={i} onClick={() => { 
+                          setIsAnimating(false); 
+                          setIsStepAnimating(false); 
+                          setSelectedYTarget(null);
+                          setAngle(btn.val); 
+                        }}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all shadow-xs cursor-pointer border ${
+                            isCur 
+                              ? 'bg-nordic text-white border-nordic-dark shadow-sm' 
+                              : 'bg-[#FAF7F2] hover:bg-[#EFE8DC] border-[#DDD3C2] text-slate-700'
+                          }`}>
+                          {btn.math ? <MathInline math={btn.math} /> : btn.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Row 2: By Height y-coordinate (y = sin x) */}
+                  <div className="flex items-center gap-1.5 flex-wrap pt-1.5 border-t border-[#DDD3C2]/40">
+                    <span className="text-xs font-black text-slate-600 mr-1 flex items-center gap-1 shrink-0">
+                      <i className="fa-solid fa-arrows-up-down text-emerald-600 text-xs"></i> 快速定位 (y 座標):
+                    </span>
+                    {yTargetOptions.map((opt) => {
+                      const isSelected = selectedYTarget && selectedYTarget.id === opt.id;
+                      return (
+                        <button 
+                          key={opt.id} 
+                          onClick={() => handleSelectYTarget(opt)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all shadow-xs cursor-pointer border flex items-center gap-1 ${
+                            isSelected 
+                              ? 'bg-emerald-600 text-white border-emerald-700 shadow-sm ring-1 ring-emerald-400' 
+                              : opt.id === '1_2' 
+                                ? 'bg-amber-50 hover:bg-amber-100 border-amber-300 text-amber-900 font-bold' 
+                                : 'bg-[#FAF7F2] hover:bg-[#EFE8DC] border-[#DDD3C2] text-slate-700'
+                          }`}>
+                          <MathInline math={opt.math} />
+                          {opt.tag && (
+                            <span className={`text-[9px] px-1 py-0.2 rounded font-sans ${
+                              isSelected ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-600'
+                            }`}>
+                              {opt.tag}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+
+                    {selectedYTarget && (
+                      <button 
+                        onClick={() => setSelectedYTarget(null)}
+                        className="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 transition-all ml-1 cursor-pointer">
+                        <i className="fa-solid fa-xmark mr-1"></i> 清除 y 標線
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Active Y-Target Sub-Navigation Bar */}
+                  {selectedYTarget && (
+                    <div className="bg-gradient-to-r from-emerald-50 via-teal-50/60 to-white border border-emerald-200 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs shadow-xs animate-slide-up">
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] shrink-0 font-bold">
+                          y
+                        </span>
+                        <div className="font-bold text-slate-800">
+                          指定目標高度 <strong className="text-emerald-800 font-mono text-sm"><MathInline math={selectedYTarget.math} /></strong> ({selectedYTarget.approx})
+                          <span className="text-slate-500 text-[11px] ml-1.5 font-normal">
+                            ➔ 解方程式 <MathInline math={`\\sin x = ${selectedYTarget.label.replace('y = ', '')}`} />，主週期 <MathInline math="[0, 2\\pi]" /> 內共有 {selectedYTarget.angles.length} 個對應角：
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 flex-wrap shrink-0">
+                        {selectedYTarget.angles.map((ang, aIdx) => {
+                          const isCurrentAngle = Math.abs((angle % (2 * Math.PI)) - ang.rad) < 0.05;
+                          return (
+                            <button 
+                              key={aIdx} 
+                              onClick={() => handleJumpToYAngle(ang.rad)}
+                              className={`px-3 py-1.5 rounded-xl font-mono text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                                isCurrentAngle 
+                                  ? 'bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-400' 
+                                  : 'bg-white hover:bg-emerald-100/60 text-emerald-900 border border-emerald-300'
+                              }`}>
+                              <span>{ang.quad}:</span>
+                              <MathInline math={`x = ${ang.math}`} />
+                              <span className="text-[10px] opacity-80">({ang.deg})</span>
+                              {isCurrentAngle && <i className="fa-solid fa-circle-check text-[10px] text-emerald-200 ml-0.5"></i>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
