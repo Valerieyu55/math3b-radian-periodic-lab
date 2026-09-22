@@ -303,17 +303,39 @@ unit2_code = r'''
       );
     };
 
+    // ── Textbook 13 Special Points Table Data (龍騰文化課本 P.23 完整對照) ──
+    const textbookSpecialPoints = [
+      { label: '0', val: 0, deg: '0°', xLatex: '0', yLatex: '0', yVal: 0, approx: '0', note: '平衡點 (起點)' },
+      { label: 'π/6', val: Math.PI / 6, deg: '30°', xLatex: '\\frac{\\pi}{6}', yLatex: '\\frac{1}{2}', yVal: 0.5, approx: '0.500', note: '第 I 象限' },
+      { label: 'π/4', val: Math.PI / 4, deg: '45°', xLatex: '\\frac{\\pi}{4}', yLatex: '\\frac{\\sqrt{2}}{2}', yVal: Math.SQRT2 / 2, approx: '≈ 0.707', note: '第 I 象限' },
+      { label: 'π/3', val: Math.PI / 3, deg: '60°', xLatex: '\\frac{\\pi}{3}', yLatex: '\\frac{\\sqrt{3}}{2}', yVal: Math.sqrt(3) / 2, approx: '≈ 0.866', note: '第 I 象限' },
+      { label: 'π/2', val: Math.PI / 2, deg: '90°', xLatex: '\\frac{\\pi}{2}', yLatex: '1', yVal: 1, approx: '1.000', note: '波峰極大值' },
+      { label: '2π/3', val: 2 * Math.PI / 3, deg: '120°', xLatex: '\\frac{2\\pi}{3}', yLatex: '\\frac{\\sqrt{3}}{2}', yVal: Math.sqrt(3) / 2, approx: '≈ 0.866', note: '第 II 象限' },
+      { label: '3π/4', val: 3 * Math.PI / 4, deg: '135°', xLatex: '\\frac{3\\pi}{4}', yLatex: '\\frac{\\sqrt{2}}{2}', yVal: Math.SQRT2 / 2, approx: '≈ 0.707', note: '第 II 象限' },
+      { label: '5π/6', val: 5 * Math.PI / 6, deg: '150°', xLatex: '\\frac{5\\pi}{6}', yLatex: '\\frac{1}{2}', yVal: 0.5, approx: '0.500', note: '第 II 象限' },
+      { label: 'π', val: Math.PI, deg: '180°', xLatex: '\\pi', yLatex: '0', yVal: 0, approx: '0', note: '平衡點 (半週期)' },
+      { label: '5π/4', val: 5 * Math.PI / 4, deg: '225°', xLatex: '\\frac{5\\pi}{4}', yLatex: '-\\frac{\\sqrt{2}}{2}', yVal: -Math.SQRT2 / 2, approx: '≈ -0.707', note: '第 III 象限' },
+      { label: '3π/2', val: 3 * Math.PI / 2, deg: '270°', xLatex: '\\frac{3\\pi}{2}', yLatex: '-1', yVal: -1, approx: '-1.000', note: '波谷極小值' },
+      { label: '7π/4', val: 7 * Math.PI / 4, deg: '315°', xLatex: '\\frac{7\\pi}{4}', yLatex: '-\\frac{\\sqrt{2}}{2}', yVal: -Math.SQRT2 / 2, approx: '≈ -0.707', note: '第 IV 象限' },
+      { label: '2π', val: 2 * Math.PI, deg: '360°', xLatex: '2\\pi', yLatex: '0', yVal: 0, approx: '0', note: '完成一週期' }
+    ];
+
     // ── TAB 8 (UNIT 02 - MODULE 07): 單位圓與正弦波生成實驗室 ──
     const PeriodicSineTab = () => {
       const [angle, setAngle] = useState(1.0); // 0 to 4pi
       const [isAnimating, setIsAnimating] = useState(false);
       const [animSpeed, setAnimSpeed] = useState(1);
       const [freqHz, setFreqHz] = useState(60); // Physics frequency simulator (Hz)
+      const [plottedCount, setPlottedCount] = useState(13); // Number of plotted textbook points (0 ~ 13)
+      const [showSmoothCurve, setShowSmoothCurve] = useState(true); // Whether to connect dots with smooth curve
+      const [isStepAnimating, setIsStepAnimating] = useState(false); // Auto step-by-step plotting
+      const [selectedPointIndex, setSelectedPointIndex] = useState(null); // Highlighting table point
       const canvasRef = useRef(null);
       const animFrameRef = useRef(null);
       const w = 680, h = 380;
       useRetinaCanvas(canvasRef, w, h);
 
+      // Continuous Rotation Animation Loop
       useEffect(() => {
         if (!isAnimating) return;
         let lastTime = performance.now();
@@ -333,6 +355,78 @@ unit2_code = r'''
         };
       }, [isAnimating, animSpeed]);
 
+      // Step-by-Step Auto Plotting Timer Loop
+      useEffect(() => {
+        if (!isStepAnimating) return;
+        const timer = setInterval(() => {
+          setPlottedCount(prev => {
+            if (prev >= textbookSpecialPoints.length) {
+              setIsStepAnimating(false);
+              return prev;
+            }
+            const nextCount = prev + 1;
+            const targetPt = textbookSpecialPoints[nextCount - 1];
+            setAngle(targetPt.val);
+            setSelectedPointIndex(nextCount - 1);
+            return nextCount;
+          });
+        }, 750);
+        return () => clearInterval(timer);
+      }, [isStepAnimating]);
+
+      // Step Handlers
+      const handleStepNext = () => {
+        setIsAnimating(false);
+        setIsStepAnimating(false);
+        setPlottedCount(prev => {
+          const nextCount = Math.min(prev + 1, textbookSpecialPoints.length);
+          const targetPt = textbookSpecialPoints[nextCount - 1];
+          if (targetPt) {
+            setAngle(targetPt.val);
+            setSelectedPointIndex(nextCount - 1);
+          }
+          return nextCount;
+        });
+      };
+
+      const handleToggleStepAnim = () => {
+        setIsAnimating(false);
+        if (plottedCount >= textbookSpecialPoints.length) {
+          setPlottedCount(0);
+          setSelectedPointIndex(null);
+        }
+        setIsStepAnimating(prev => !prev);
+      };
+
+      const handlePlotAll = () => {
+        setIsAnimating(false);
+        setIsStepAnimating(false);
+        setPlottedCount(textbookSpecialPoints.length);
+        setShowSmoothCurve(true);
+        setSelectedPointIndex(textbookSpecialPoints.length - 1);
+        setAngle(textbookSpecialPoints[textbookSpecialPoints.length - 1].val);
+      };
+
+      const handleResetPlot = () => {
+        setIsAnimating(false);
+        setIsStepAnimating(false);
+        setPlottedCount(0);
+        setSelectedPointIndex(null);
+        setShowSmoothCurve(false);
+        setAngle(0);
+      };
+
+      const handleSelectPoint = (idx) => {
+        setIsAnimating(false);
+        setIsStepAnimating(false);
+        setSelectedPointIndex(idx);
+        setAngle(textbookSpecialPoints[idx].val);
+        if (plottedCount <= idx) {
+          setPlottedCount(idx + 1);
+        }
+      };
+
+      // Canvas Rendering
       useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -353,26 +447,26 @@ unit2_code = r'''
         // Partition dividing line
         ctx.strokeStyle = 'rgba(78, 114, 146, 0.25)';
         ctx.setLineDash([4, 4]);
-        ctx.beginPath(); ctx.moveTo(200, 20); ctx.lineTo(200, h - 20); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(198, 20); ctx.lineTo(198, h - 20); ctx.stroke();
         ctx.setLineDash([]);
 
-        // ── LEFT: Unit Circle ──
-        const cx = 105, cy = 190, R = 65;
+        // ── LEFT: Unit Circle (Textbook P.23 Fig 5) ──
+        const cx = 98, cy = 190, R = 62;
 
         // Circle Axes
         ctx.strokeStyle = '#94A3B8';
         ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.moveTo(cx - R - 25, cy); ctx.lineTo(cx + R + 25, cy);
-        ctx.moveTo(cx, cy - R - 25); ctx.lineTo(cx, cy + R + 25);
+        ctx.moveTo(cx - R - 20, cy); ctx.lineTo(cx + R + 20, cy);
+        ctx.moveTo(cx, cy - R - 20); ctx.lineTo(cx, cy + R + 20);
         ctx.stroke();
 
-        // Axis labels
+        // Axis labels x, y
         ctx.fillStyle = '#64748B';
-        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.font = 'bold 11px Nunito, sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('u', cx + R + 32, cy);
-        ctx.fillText('v', cx, cy - R - 32);
+        ctx.fillText('x', cx + R + 26, cy);
+        ctx.fillText('y', cx, cy - R - 26);
 
         // Unit Circle
         ctx.strokeStyle = '#4E7292';
@@ -381,9 +475,35 @@ unit2_code = r'''
         ctx.arc(cx, cy, R, 0, 2 * Math.PI);
         ctx.stroke();
 
+        // Origin O label (italic)
+        ctx.fillStyle = '#475569';
+        ctx.font = 'italic bold 11px "Times New Roman", serif';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.fillText('O', cx - 5, cy + 3);
+
+        // Four Intercepts: (1,0), (0,1), (-1,0), (0,-1)
+        ctx.fillStyle = '#334155';
+        ctx.font = 'bold 9px "Fira Code", monospace';
+        // (1,0)
+        ctx.beginPath(); ctx.arc(cx + R, cy, 2.5, 0, 2 * Math.PI); ctx.fill();
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText('(1,0)', cx + R + 3, cy + 12);
+        // (0,1)
+        ctx.beginPath(); ctx.arc(cx, cy - R, 2.5, 0, 2 * Math.PI); ctx.fill();
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText('(0,1)', cx, cy - R - 4);
+        // (-1,0)
+        ctx.beginPath(); ctx.arc(cx - R, cy, 2.5, 0, 2 * Math.PI); ctx.fill();
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText('(-1,0)', cx - R - 3, cy + 12);
+        // (0,-1)
+        ctx.beginPath(); ctx.arc(cx, cy + R, 2.5, 0, 2 * Math.PI); ctx.fill();
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillText('(0,-1)', cx, cy + R + 4);
+
         // Angle Sector Fill
         const normAngle = angle % (2 * Math.PI);
-        ctx.fillStyle = 'rgba(78, 114, 146, 0.15)';
+        ctx.fillStyle = 'rgba(78, 114, 146, 0.12)';
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, R, 0, -normAngle, true);
@@ -394,8 +514,15 @@ unit2_code = r'''
         ctx.strokeStyle = '#C59B63';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(cx, cy, 22, 0, -normAngle, true);
+        ctx.arc(cx, cy, 20, 0, -normAngle, true);
         ctx.stroke();
+
+        // Angle theta symbol
+        const midArc = -normAngle / 2;
+        ctx.fillStyle = '#C59B63';
+        ctx.font = 'bold 10.5px Nunito, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('θ', cx + 27 * Math.cos(midArc), cy + 27 * Math.sin(midArc));
 
         // Current Rotating Point P(cos x, sin x)
         const px = cx + R * Math.cos(normAngle);
@@ -408,9 +535,17 @@ unit2_code = r'''
         ctx.moveTo(cx, cy); ctx.lineTo(px, py);
         ctx.stroke();
 
-        // Horizontal Cosine Projection (Blue)
-        ctx.strokeStyle = 'rgba(59, 130, 246, 0.85)';
-        ctx.lineWidth = 2;
+        // Radius Length 1 Label
+        ctx.fillStyle = '#2B3848';
+        ctx.font = 'bold 10px Nunito, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        const radMidX = (cx + px) / 2 + 6 * Math.sin(normAngle);
+        const radMidY = (cy + py) / 2 - 6 * Math.cos(normAngle);
+        ctx.fillText('1', radMidX, radMidY);
+
+        // Horizontal Cosine Projection (Blue dashed)
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.7)';
+        ctx.lineWidth = 1.5;
         ctx.setLineDash([2, 2]);
         ctx.beginPath();
         ctx.moveTo(px, py); ctx.lineTo(cx, py);
@@ -418,29 +553,53 @@ unit2_code = r'''
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Vertical Sine Projection (Green / Terracotta)
-        const sinVal = Math.sin(angle);
-        ctx.strokeStyle = sinVal >= 0 ? '#10B981' : '#E11D48';
+        // Vertical Sine Projection (Pure textbook RED line segment, as in Image 3)
+        ctx.strokeStyle = '#DC2626';
         ctx.lineWidth = 3.5;
         ctx.beginPath();
         ctx.moveTo(px, cy); ctx.lineTo(px, py);
         ctx.stroke();
 
+        // Right-angle mark at (px, cy)
+        if (Math.abs(Math.sin(normAngle)) > 0.15 && Math.abs(Math.cos(normAngle)) > 0.1) {
+          const sq = 5;
+          const sgnX = Math.cos(normAngle) >= 0 ? -1 : 1;
+          const sgnY = Math.sin(normAngle) >= 0 ? -1 : 1;
+          ctx.strokeStyle = '#DC2626';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(px + sgnX * sq, cy);
+          ctx.lineTo(px + sgnX * sq, cy + sgnY * sq);
+          ctx.lineTo(px, cy + sgnY * sq);
+          ctx.stroke();
+        }
+
+        // Vertical label sin θ beside vertical segment
+        if (Math.abs(py - cy) > 14) {
+          ctx.fillStyle = '#DC2626';
+          ctx.font = 'bold 10px Nunito, sans-serif';
+          ctx.textAlign = Math.cos(normAngle) >= 0 ? 'left' : 'right';
+          ctx.textBaseline = 'middle';
+          const labelOffsetX = Math.cos(normAngle) >= 0 ? 5 : -5;
+          ctx.fillText('sin θ', px + labelOffsetX, (cy + py) / 2);
+        }
+
         // Point P Dot
-        ctx.fillStyle = '#C59B63';
-        ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill();
+        ctx.fillStyle = '#DC2626';
+        ctx.beginPath(); ctx.arc(px, py, 5.5, 0, 2 * Math.PI); ctx.fill();
         ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.stroke();
 
-        // Badge at Unit Circle
-        drawCanvasBadge(ctx, `P(cos x, sin x)`, px, py - 18, {
-          fontSize: 10,
-          bgColor: 'rgba(250, 247, 242, 0.95)',
-          borderColor: '#C59B63'
+        // Badge at Unit Circle P(cos θ, sin θ)
+        drawCanvasBadge(ctx, `P(cos θ, sin θ)`, px, py - 18, {
+          fontSize: 9.5,
+          textColor: '#DC2626',
+          bgColor: 'rgba(254, 242, 242, 0.95)',
+          borderColor: '#FECACA'
         });
 
         // ── RIGHT: Cartesian Wave Graph y = sin x ──
-        const ox = 225, oy = 190;
-        const graphW = 425;
+        const ox = 220, oy = 190;
+        const graphW = 435;
         const scaleX = graphW / (4 * Math.PI); // px per rad
         const scaleY = R; // 1 unit = R px
 
@@ -459,11 +618,11 @@ unit2_code = r'''
         ctx.beginPath();
         ctx.moveTo(ox, oy - scaleY - 28); ctx.lineTo(ox - 4, oy - scaleY - 20); ctx.lineTo(ox + 4, oy - scaleY - 20); ctx.fill();
 
-        ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillText('x (rad)', ox + graphW + 5, oy + 16);
+        ctx.font = 'bold 11px Nunito, sans-serif';
+        ctx.fillText('x (弳 rad)', ox + graphW + 5, oy + 16);
         ctx.fillText('y', ox - 14, oy - scaleY - 20);
 
-        // Y Ticks
+        // Y Ticks (+1, 0, -1)
         [-1, 1].forEach(v => {
           const yPos = oy - v * scaleY;
           ctx.strokeStyle = '#CBD5E1';
@@ -475,31 +634,34 @@ unit2_code = r'''
         });
         ctx.fillText('0', ox - 7, oy);
 
-        // X Ticks (0, pi/2, pi, 3pi/2, 2pi, 5pi/2, 3pi, 7pi/2, 4pi)
+        // Primary X Ticks
         const ticks = [
-          { val: Math.PI / 2, label: 'π/2' },
+          { val: Math.PI / 2, num: 'π', den: '2' },
           { val: Math.PI, label: 'π' },
-          { val: 3 * Math.PI / 2, label: '3π/2' },
+          { val: 3 * Math.PI / 2, num: '3π', den: '2' },
           { val: 2 * Math.PI, label: '2π' },
-          { val: 5 * Math.PI / 2, label: '5π/2' },
+          { val: 5 * Math.PI / 2, num: '5π', den: '2' },
           { val: 3 * Math.PI, label: '3π' },
-          { val: 7 * Math.PI / 2, label: '7π/2' },
+          { val: 7 * Math.PI / 2, num: '7π', den: '2' },
           { val: 4 * Math.PI, label: '4π' },
         ];
-
         ticks.forEach(t => {
           const tx = ox + t.val * scaleX;
           ctx.strokeStyle = 'rgba(203, 213, 225, 0.6)';
           ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(tx, oy - scaleY - 10); ctx.lineTo(tx, oy + scaleY + 10); ctx.stroke();
-          ctx.fillStyle = '#64748B';
-          ctx.font = 'bold 10px Fira Code, monospace';
-          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-          ctx.fillText(t.label, tx, oy + 5);
+          if (t.num && t.den) {
+            drawCanvasFraction(ctx, t.num, t.den, tx, oy + 12, '#64748B');
+          } else {
+            ctx.fillStyle = '#64748B';
+            ctx.font = 'bold 10px Fira Code, monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            ctx.fillText(t.label, tx, oy + 5);
+          }
         });
 
-        // 1. Ghost full wave 0 to 4pi (Subtle)
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+        // 1. Ghost full wave 0 to 4pi
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
         ctx.lineWidth = 2;
         ctx.setLineDash([4, 4]);
         ctx.beginPath();
@@ -511,36 +673,66 @@ unit2_code = r'''
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 2. Active Solid Wave 0 to angle (Green above x-axis, Red below x-axis)
-        ctx.lineWidth = 3.5;
-        const step = 0.02;
-        for (let t = 0; t < angle; t += step) {
-          const tNext = Math.min(t + step, angle);
-          const midT = (t + tNext) / 2;
-          const sVal = Math.sin(midT);
-          
-          ctx.strokeStyle = sVal >= 0 ? '#10B981' : '#E11D48';
-          ctx.beginPath();
-          const x1 = ox + t * scaleX;
-          const y1 = oy - Math.sin(t) * scaleY;
-          const x2 = ox + tNext * scaleX;
-          const y2 = oy - Math.sin(tNext) * scaleY;
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
+        // 2. Active Smooth Wave
+        if (showSmoothCurve) {
+          const maxPlotRad = plottedCount > 0 ? textbookSpecialPoints[Math.min(plottedCount - 1, 12)].val : 0;
+          const drawLimit = Math.max(angle, maxPlotRad);
+          ctx.lineWidth = 3.5;
+          const step = 0.02;
+          for (let t = 0; t < drawLimit; t += step) {
+            const tNext = Math.min(t + step, drawLimit);
+            const midT = (t + tNext) / 2;
+            const sVal = Math.sin(midT);
+            ctx.strokeStyle = sVal >= 0 ? '#10B981' : '#E11D48';
+            ctx.beginPath();
+            const x1 = ox + t * scaleX;
+            const y1 = oy - Math.sin(t) * scaleY;
+            const x2 = ox + tNext * scaleX;
+            const y2 = oy - Math.sin(tNext) * scaleY;
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          }
         }
 
-        // 3. Five Key Points on [0, 2pi]
-        const keyPts = [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI];
-        keyPts.forEach(pt => {
-          const kx = ox + pt * scaleX;
-          const ky = oy - Math.sin(pt) * scaleY;
-          const isPassed = angle >= pt;
-          const ptSin = Math.sin(pt);
-          const ptColor = ptSin < -0.01 ? '#E11D48' : '#10B981';
-          ctx.fillStyle = isPassed ? ptColor : '#94A3B8';
-          ctx.beginPath(); ctx.arc(kx, ky, isPassed ? 4.5 : 3, 0, 2 * Math.PI); ctx.fill();
-        });
+        // 3. Draw Plotted Textbook 13 Special Points
+        for (let i = 0; i < plottedCount; i++) {
+          const pt = textbookSpecialPoints[i];
+          const kx = ox + pt.val * scaleX;
+          const ky = oy - pt.yVal * scaleY;
+          const isSelected = i === selectedPointIndex;
+
+          // Drop dashed line to x-axis
+          ctx.strokeStyle = isSelected ? 'rgba(220, 38, 38, 0.7)' : 'rgba(148, 163, 184, 0.5)';
+          ctx.lineWidth = isSelected ? 1.5 : 1;
+          ctx.setLineDash([2, 2]);
+          ctx.beginPath();
+          ctx.moveTo(kx, oy);
+          ctx.lineTo(kx, ky);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Point Marker
+          if (isSelected) {
+            ctx.strokeStyle = 'rgba(220, 38, 38, 0.25)';
+            ctx.lineWidth = 6;
+            ctx.beginPath(); ctx.arc(kx, ky, 8.5, 0, 2 * Math.PI); ctx.stroke();
+          }
+          ctx.fillStyle = isSelected ? '#DC2626' : (pt.yVal >= 0 ? '#C59B63' : '#E11D48');
+          ctx.beginPath(); ctx.arc(kx, ky, isSelected ? 5.5 : 4.5, 0, 2 * Math.PI); ctx.fill();
+          ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5; ctx.stroke();
+
+          // Selected Point Badge
+          if (isSelected) {
+            drawCanvasBadge(ctx, `(${pt.label}, ${pt.approx})`, kx, ky - 16, {
+              fontSize: 9.5,
+              fontWeight: 'bold',
+              textColor: '#DC2626',
+              bgColor: 'rgba(254, 242, 242, 0.96)',
+              borderColor: '#DC2626'
+            });
+          }
+        }
 
         // 4. Current Point on Wave (gx, gy)
         const curGx = ox + angle * scaleX;
@@ -548,7 +740,7 @@ unit2_code = r'''
         const curSinVal = Math.sin(angle);
 
         // Dynamic Laser Sync Line from Unit Circle P to Wave Point
-        ctx.strokeStyle = curSinVal >= 0 ? 'rgba(197, 155, 99, 0.85)' : 'rgba(225, 29, 72, 0.75)';
+        ctx.strokeStyle = 'rgba(220, 38, 38, 0.75)';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([3, 3]);
         ctx.beginPath();
@@ -558,7 +750,7 @@ unit2_code = r'''
         ctx.setLineDash([]);
 
         // Vertical drop line to x-axis
-        ctx.strokeStyle = curSinVal >= 0 ? 'rgba(16, 185, 129, 0.45)' : 'rgba(225, 29, 72, 0.45)';
+        ctx.strokeStyle = curSinVal >= 0 ? 'rgba(16, 185, 129, 0.5)' : 'rgba(225, 29, 72, 0.5)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(curGx, oy); ctx.lineTo(curGx, curGy);
@@ -578,20 +770,20 @@ unit2_code = r'''
         });
 
         ctx.restore();
-      }, [angle]);
+      }, [angle, plottedCount, showSmoothCurve, selectedPointIndex]);
 
       const deg = (angle * 180 / Math.PI).toFixed(1);
       const sinVal = Math.sin(angle);
       const normRad = angle % (2 * Math.PI);
       
-      let quadText = '第 I 象限';
-      if (normRad > Math.PI / 2 && normRad < Math.PI) quadText = '第 II 象限';
-      else if (normRad > Math.PI && normRad < 3 * Math.PI / 2) quadText = '第 III 象限';
-      else if (normRad > 3 * Math.PI / 2 && normRad < 2 * Math.PI) quadText = '第 IV 象限';
-      else if (Math.abs(normRad - 0) < 0.05 || Math.abs(normRad - 2 * Math.PI) < 0.05) quadText = '正 x 軸 (0 / 2π)';
-      else if (Math.abs(normRad - Math.PI / 2) < 0.05) quadText = '正 y 軸 (π/2)';
-      else if (Math.abs(normRad - Math.PI) < 0.05) quadText = '負 x 軸 (π)';
-      else if (Math.abs(normRad - 3 * Math.PI / 2) < 0.05) quadText = '負 y 軸 (3π/2)';
+      let quadText = <span>第 I 象限</span>;
+      if (normRad > Math.PI / 2 && normRad < Math.PI) quadText = <span>第 II 象限</span>;
+      else if (normRad > Math.PI && normRad < 3 * Math.PI / 2) quadText = <span>第 III 象限</span>;
+      else if (normRad > 3 * Math.PI / 2 && normRad < 2 * Math.PI) quadText = <span>第 IV 象限</span>;
+      else if (Math.abs(normRad - 0) < 0.05 || Math.abs(normRad - 2 * Math.PI) < 0.05) quadText = <span>正 x 軸 (<MathInline math="0 / 2\\pi" />)</span>;
+      else if (Math.abs(normRad - Math.PI / 2) < 0.05) quadText = <span>正 y 軸 (<MathInline math="\\frac{\\pi}{2}" />)</span>;
+      else if (Math.abs(normRad - Math.PI) < 0.05) quadText = <span>負 x 軸 (<MathInline math="\\pi" />)</span>;
+      else if (Math.abs(normRad - 3 * Math.PI / 2) < 0.05) quadText = <span>負 y 軸 (<MathInline math="\\frac{3\\pi}{2}" />)</span>;
 
       let trendText = '函數嚴格遞增 ↗';
       let trendColor = 'text-emerald-700 bg-emerald-50 border-emerald-200';
@@ -610,17 +802,18 @@ unit2_code = r'''
       return (
         <div className="space-y-6 animate-slide-up pb-10">
           <div className="textbook-card p-6 md:p-8 rounded-2xl">
+            {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
               <div>
                 <div className="text-[10px] font-black bg-nordic-light text-nordic border border-nordic-border px-3 py-1 rounded-full inline-block mb-2 uppercase tracking-widest shadow-xs">
-                  UNIT 02 · MODULE 07 · 核心生成
+                  UNIT 02 · MODULE 07 · 核心概念與波形生成
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold font-chenyu tracking-wide text-slate-800 flex items-center gap-3">
                   <i className="fa-solid fa-circle-nodes text-nordic"></i>
-                  單位圓投影與正弦波軌跡生成
+                  正弦函數定義、單位圓投影與描點法
                 </h2>
                 <p className="text-slate-600 font-bold text-sm mt-1">
-                  觀察單位圓上動點 <MathInline math="P(\cos x, \sin x)" /> 的鉛直高度投影如何隨角度 <MathInline math="x" /> 動態開展為標準正弦波曲線。
+                  融入龍騰文化高中數學 3B 課本 P.22~23 核心脈絡：從廣義角對應、單位圓 <MathInline math="y" /> 坐標本質到 13 點描點法平滑連續波形。
                 </p>
               </div>
               <div className="bg-gradient-to-br from-nordic-light to-[#E2EDF5] border border-nordic-border px-5 py-3 rounded-2xl text-center shadow-xs">
@@ -628,6 +821,129 @@ unit2_code = r'''
                 <span className="text-2xl font-black text-nordic-dark font-serif flex items-center justify-center">
                   <MathInline math="y = \sin x" />
                 </span>
+              </div>
+            </div>
+
+            {/* ── Textbook Foundation Hero Cards (課本 P.22~23 核心觀念雙卡) ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-6">
+              {/* Card 1: Definition of Sine Function (Image 1, Textbook P.22) */}
+              <div className="lg:col-span-6 bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-nordic/5 rounded-bl-full pointer-events-none" />
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-black bg-nordic-light text-nordic border border-nordic-border px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
+                      課本核心觀念 1 · 函數定義 (P.22)
+                    </span>
+                    <span className="text-[11px] font-black text-slate-400 font-mono">
+                      <i className="fa-solid fa-book-open mr-1 text-nordic"></i> 龍騰文化 P.22~23
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold font-chenyu text-slate-800 mb-2.5 flex items-center gap-2">
+                    <i className="fa-solid fa-square-root-variable text-nordic"></i>
+                    正弦函數的數學本質 (Definition)
+                  </h3>
+                  <p className="text-xs md:text-sm font-bold text-slate-700 leading-relaxed mb-4">
+                    給定一個<strong>廣義角 <MathInline math="x" /></strong>，三角比 <MathInline math="\sin x" /> 的值即隨之<strong>唯一確定</strong>，因此它是自變數 <MathInline math="x" /> 的函數，稱為<strong>正弦函數</strong>：
+                  </p>
+                  <div className="bg-gradient-to-r from-nordic-light via-[#F2F6F9] to-white border border-nordic-border p-3.5 rounded-xl text-center shadow-inner mb-3">
+                    <div className="text-xl md:text-2xl font-black text-nordic-dark font-serif">
+                      <MathInline math="y = f(x) = \sin x \quad (x \in \mathbb{R})" />
+                    </div>
+                    <p className="text-[11px] font-bold text-slate-500 mt-1">
+                      自變數 <MathInline math="x" /> 採用「弳（弧度 rad，無因次純實數）」，使三角函數成為實數到實數的連續映射
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3 text-xs font-bold text-amber-900 flex items-start gap-2.5">
+                  <i className="fa-solid fa-lightbulb text-amber-600 mt-0.5 shrink-0 text-sm"></i>
+                  <div className="leading-relaxed">
+                    <strong>描繪函數圖形最直接的方法就是「描點法」：</strong>
+                    先對某些特殊的 <MathInline math="x" /> 值（弳）求出其對應的函數值 <MathInline math="y = \sin x" />，列表後在坐標平面逐一標點並平滑連線。
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Unit Circle & Y-Coordinate Nature (Image 3, Textbook P.23 Fig 5) */}
+              <div className="lg:col-span-6 bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-bl-full pointer-events-none" />
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-black bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
+                      課本核心觀念 2 · 單位圓與 y 坐標 (P.23 圖5)
+                    </span>
+                    <span className="text-[11px] font-black text-rose-600 font-mono">
+                      <i className="fa-solid fa-circle-dot mr-1"></i> 幾何核心原理
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold font-chenyu text-slate-800 mb-2.5 flex items-center gap-2">
+                    <i className="fa-solid fa-arrows-to-circle text-rose-600"></i>
+                    單位圓與正弦值的幾何意義 (Unit Circle)
+                  </h3>
+                  <div className="flex flex-col sm:flex-row items-center gap-4 mb-3">
+                    {/* Unit Circle Mini Diagram SVG (Replicating Image 3) */}
+                    <div className="w-36 h-36 shrink-0 bg-[#FAF7F2] rounded-2xl border border-[#DDD3C2] p-2 flex items-center justify-center relative shadow-inner">
+                      <svg viewBox="0 0 140 140" className="w-full h-full">
+                        {/* Axes */}
+                        <line x1="10" y1="70" x2="130" y2="70" stroke="#94A3B8" strokeWidth="1.2" />
+                        <line x1="70" y1="10" x2="70" y2="130" stroke="#94A3B8" strokeWidth="1.2" />
+                        <text x="133" y="73" fontSize="8" fill="#64748B" fontWeight="bold">x</text>
+                        <text x="70" y="8" fontSize="8" fill="#64748B" fontWeight="bold" textAnchor="middle">y</text>
+                        
+                        {/* Unit Circle */}
+                        <circle cx="70" cy="70" r="46" fill="none" stroke="#4E7292" strokeWidth="2" />
+                        
+                        {/* Four Intercepts */}
+                        <circle cx="116" cy="70" r="2" fill="#2B3848" />
+                        <text x="116" y="81" fontSize="6.5" fill="#475569" fontWeight="bold" textAnchor="middle">(1,0)</text>
+                        <circle cx="70" cy="24" r="2" fill="#2B3848" />
+                        <text x="70" y="20" fontSize="6.5" fill="#475569" fontWeight="bold" textAnchor="middle">(0,1)</text>
+                        <circle cx="24" cy="70" r="2" fill="#2B3848" />
+                        <text x="24" y="81" fontSize="6.5" fill="#475569" fontWeight="bold" textAnchor="middle">(-1,0)</text>
+                        <circle cx="70" cy="116" r="2" fill="#2B3848" />
+                        <text x="70" y="126" fontSize="6.5" fill="#475569" fontWeight="bold" textAnchor="middle">(0,-1)</text>
+
+                        {/* Origin */}
+                        <text x="64" y="78" fontSize="7" fill="#64748B" fontStyle="italic" fontWeight="bold">O</text>
+
+                        {/* Terminal line at ~55 deg */}
+                        <line x1="70" y1="70" x2="96.4" y2="32.3" stroke="#2B3848" strokeWidth="1.8" />
+                        <text x="78" y="50" fontSize="7.5" fill="#2B3848" fontWeight="bold">1</text>
+                        
+                        {/* Angle Arc */}
+                        <path d="M 85 70 A 15 15 0 0 0 79 57.5" fill="none" stroke="#C59B63" strokeWidth="1.5" />
+                        <text x="86" y="63" fontSize="7" fill="#C59B63" fontWeight="bold">θ</text>
+
+                        {/* Vertical Red Segment: sin theta */}
+                        <line x1="96.4" y1="70" x2="96.4" y2="32.3" stroke="#DC2626" strokeWidth="3" />
+                        <text x="100" y="55" fontSize="7" fill="#DC2626" fontWeight="bold">sin θ</text>
+
+                        {/* Right-angle mark */}
+                        <polyline points="91.4,70 91.4,65 96.4,65" fill="none" stroke="#DC2626" strokeWidth="1" />
+
+                        {/* Point P */}
+                        <circle cx="96.4" cy="32.3" r="3.5" fill="#DC2626" stroke="#FFFFFF" strokeWidth="1.5" />
+                        <text x="96" y="27" fontSize="7" fill="#DC2626" fontWeight="bold" textAnchor="middle">P(cosθ, sinθ)</text>
+                      </svg>
+                    </div>
+
+                    {/* Text Explanations */}
+                    <div className="space-y-2 text-xs font-bold text-slate-700">
+                      <p className="leading-relaxed">
+                        在坐標平面上，以原點 <MathInline math="O" /> 為圓心作一<strong>單位圓</strong>，再以 <MathInline math="x" /> 軸正向為始邊作廣義角 <MathInline math="\theta" />。
+                      </p>
+                      <p className="leading-relaxed">
+                        終邊交單位圓於 <MathInline math="P(\cos\theta, \sin\theta)" />，半徑為 1，因此：
+                      </p>
+                      <div className="bg-rose-50 border border-rose-200 text-rose-800 font-black p-2 rounded-lg text-center font-mono">
+                        <MathInline math="\sin\theta = P \text{ 點的 } y \text{ 坐標（鉛直高度投影）}" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-[11px] font-bold text-slate-600 flex items-center justify-between">
+                  <span><i className="fa-solid fa-arrows-up-down text-rose-600 mr-1"></i> 紅色線段表示鉛直高度投影</span>
+                  <span className="font-mono text-rose-700 font-black">第 I, II 象限 y &gt; 0 ｜ 第 III, IV 象限 y &lt; 0</span>
+                </div>
               </div>
             </div>
 
@@ -646,12 +962,12 @@ unit2_code = r'''
             <div className="control-box-card p-6 mb-6 space-y-5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <button onClick={() => setIsAnimating(!isAnimating)}
+                  <button onClick={() => { setIsStepAnimating(false); setIsAnimating(!isAnimating); }}
                     className={`px-5 py-2.5 rounded-xl font-black text-xs flex items-center gap-2 shadow-md transition-all ${
                       isAnimating ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-[#2B3848] hover:bg-[#1E2834] text-white'
                     }`}>
                     <i className={`fa-solid ${isAnimating ? 'fa-pause' : 'fa-play'}`}></i>
-                    {isAnimating ? '暫停自動旋轉' : '開始連續旋轉演示'}
+                    {isAnimating ? '暫停連續旋轉' : '開始連續旋轉演示'}
                   </button>
                   <div className="flex items-center bg-[#FAF7F2] border border-[#DDD3C2] rounded-xl p-1 text-xs font-black text-slate-700 shadow-xs">
                     <span className="px-2 text-[10px] text-slate-500">速度:</span>
@@ -676,7 +992,7 @@ unit2_code = r'''
                     { label: '3π/2', math: '\\frac{3\\pi}{2}', val: 3 * Math.PI / 2 },
                     { label: '2π', math: '2\\pi', val: 2 * Math.PI },
                   ].map((btn, i) => (
-                    <button key={i} onClick={() => { setIsAnimating(false); setAngle(btn.val); }}
+                    <button key={i} onClick={() => { setIsAnimating(false); setIsStepAnimating(false); setAngle(btn.val); }}
                       className="px-2.5 py-1 bg-[#FAF7F2] hover:bg-[#EFE8DC] border border-[#DDD3C2] text-slate-700 font-black rounded-lg text-xs transition-all shadow-xs">
                       {btn.math ? <MathInline math={btn.math} /> : btn.label}
                     </button>
@@ -695,7 +1011,7 @@ unit2_code = r'''
                   </span>
                 </div>
                 <input type="range" min="0" max={4 * Math.PI} step="0.02" value={angle}
-                  onChange={(e) => { setIsAnimating(false); setAngle(parseFloat(e.target.value)); }}
+                  onChange={(e) => { setIsAnimating(false); setIsStepAnimating(false); setAngle(parseFloat(e.target.value)); }}
                   className="w-full accent-nordic h-2 bg-[#DDD3C2] rounded-lg cursor-pointer" />
               </div>
             </div>
@@ -719,7 +1035,7 @@ unit2_code = r'''
               <div className="bg-gradient-to-br from-[#FAF5ED] to-[#F4EADB] border border-[#E8DAC5] p-4 rounded-2xl shadow-xs">
                 <span className="text-[10px] font-black text-caramel uppercase tracking-widest block mb-1">QUADRANT POSITION</span>
                 <div className="text-base font-black text-slate-800">{quadText}</div>
-                <span className="text-xs font-bold text-slate-500 block mt-1">主週期 <MathInline math="[0, 2\pi]" /></span>
+                <span className="text-xs font-bold text-slate-500 block mt-1">主週期 <MathInline math="[0, 2\\pi]" /></span>
               </div>
 
               <div className="bg-gradient-to-br from-[#F6F3F9] to-[#ECE5F4] border border-[#DDD3EA] p-4 rounded-2xl shadow-xs">
@@ -727,26 +1043,224 @@ unit2_code = r'''
                 <div className={`text-xs font-black px-2 py-1 rounded-lg border inline-block mt-0.5 ${trendColor}`}>
                   {trendText}
                 </div>
-                <span className="text-[10px] font-bold text-slate-500 block mt-1.5">週期 <MathInline math="T = 2\pi" /></span>
+                <span className="text-[10px] font-bold text-slate-500 block mt-1.5">週期 <MathInline math="T = 2\\pi" /></span>
               </div>
             </div>
 
-            {/* Five Key Points Pedagogical Table */}
+            {/* ── Textbook 13-Point Plotting Lab (Image 1 & Image 2, Textbook P.23) ── */}
+            <div className="bg-[#FAF7F2] border border-[#DDD3C2] rounded-2xl p-5 md:p-6 shadow-xs space-y-4 mb-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#DDD3C2]/70 pb-3">
+                <div>
+                  <div className="text-[10px] font-black bg-nordic-light text-nordic border border-nordic-border px-3 py-0.5 rounded-full inline-block mb-1.5 uppercase tracking-widest shadow-xs">
+                    TEXTBOOK POINT-PLOTTING METHOD · P.23 表格完整重現
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold font-chenyu text-slate-800 flex items-center gap-2">
+                    <i className="fa-solid fa-chart-line text-nordic"></i>
+                    課本核心方法：13 特殊角「描點法」步進實驗台
+                  </h3>
+                  <p className="text-xs text-slate-600 font-bold mt-1">
+                    描繪函數圖形最直接的方法就是<strong>描點法</strong>。點擊表格任一欄位或使用步進按鈕，觀察離散點如何串聯成平滑正弦波。
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-black px-3 py-1.5 rounded-xl border bg-white text-slate-700 border-slate-200 shadow-xs flex items-center gap-1.5">
+                    <i className="fa-solid fa-bullseye text-caramel"></i>
+                    已描繪：<strong className="text-nordic font-mono text-sm">{plottedCount}</strong> / 13 點
+                  </span>
+                </div>
+              </div>
+
+              {/* Control Action Toolbar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-[#DDD3C2]/70">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button 
+                    onClick={handleStepNext}
+                    disabled={plottedCount >= textbookSpecialPoints.length}
+                    className={`px-3.5 py-2 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all shadow-xs ${
+                      plottedCount >= textbookSpecialPoints.length 
+                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200' 
+                        : 'bg-nordic hover:bg-nordic-dark text-white shadow-nordic/20 hover:-translate-y-0.5 cursor-pointer'
+                    }`}>
+                    <i className="fa-solid fa-arrow-right-long"></i>
+                    👉 描繪下一點 (Step Next)
+                  </button>
+
+                  <button 
+                    onClick={handleToggleStepAnim}
+                    className={`px-3.5 py-2 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+                      isStepAnimating 
+                        ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-500/20' 
+                        : 'bg-[#2B3848] hover:bg-[#1E2834] text-white'
+                    }`}>
+                    <i className={`fa-solid ${isStepAnimating ? 'fa-pause' : 'fa-play'}`}></i>
+                    {isStepAnimating ? '暫停逐點描繪' : '▶ 自動逐點描繪'}
+                  </button>
+
+                  <button 
+                    onClick={handlePlotAll}
+                    className="px-3.5 py-2 bg-lavender hover:bg-lavender-dark text-white rounded-xl font-black text-xs flex items-center gap-1.5 transition-all shadow-xs hover:-translate-y-0.5 cursor-pointer">
+                    <i className="fa-solid fa-wand-magic-sparkles"></i>
+                    ✨ 一鍵描繪 13 點
+                  </button>
+
+                  <button 
+                    onClick={handleResetPlot}
+                    className="px-3 py-2 bg-[#FAF7F2] hover:bg-[#EAE3D5] text-slate-700 border border-[#DDD3C2] rounded-xl font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer">
+                    <i className="fa-solid fa-rotate-left"></i>
+                    🔄 重置清空
+                  </button>
+                </div>
+
+                {/* Toggle Smooth Curve */}
+                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 transition-all select-none">
+                  <input 
+                    type="checkbox" 
+                    checked={showSmoothCurve} 
+                    onChange={(e) => setShowSmoothCurve(e.target.checked)} 
+                    className="rounded text-nordic focus:ring-nordic h-4 w-4 cursor-pointer"
+                  />
+                  <span className="text-xs font-black text-slate-700 flex items-center gap-1">
+                    <i className="fa-solid fa-wave-square text-nordic"></i> 〰️ 平滑曲線連線
+                  </span>
+                </label>
+              </div>
+
+              {/* 13 Special Points Pedagogical Table (Exact replica of Image 2) */}
+              <div className="overflow-x-auto rounded-xl border border-[#DDD3C2] bg-white shadow-inner">
+                <table className="w-full text-xs text-center border-collapse">
+                  {/* Row Group 1: 0 to 2pi/3 */}
+                  <thead>
+                    <tr className="bg-[#EAE3D5] text-slate-800 font-black border-b border-[#DDD3C2]">
+                      <th className="p-2.5 w-20 bg-[#E0D8C8] text-slate-900 border-r border-[#DDD3C2]">
+                        自變數 <MathInline math="x" />
+                      </th>
+                      {textbookSpecialPoints.slice(0, 6).map((pt, idx) => (
+                        <th 
+                          key={idx}
+                          onClick={() => handleSelectPoint(idx)}
+                          className={`p-2.5 cursor-pointer transition-all border-r border-[#DDD3C2] last:border-r-0 ${
+                            selectedPointIndex === idx ? 'bg-amber-100 text-amber-950 font-black ring-2 ring-amber-400 inset-0' : 'hover:bg-[#F4EADB]'
+                          }`}>
+                          <div className="font-mono text-[11px]"><MathInline math={pt.xLatex} /></div>
+                          <div className="text-[10px] text-slate-500 font-sans font-normal mt-0.5">{pt.deg}</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="font-bold text-slate-700 border-b-2 border-[#DDD3C2]">
+                    <tr className="border-b border-[#DDD3C2]/60">
+                      <td className="p-2.5 bg-[#FAF7F2] font-black text-slate-900 border-r border-[#DDD3C2]">
+                        <MathInline math="y = \sin x" />
+                      </td>
+                      {textbookSpecialPoints.slice(0, 6).map((pt, idx) => (
+                        <td 
+                          key={idx}
+                          onClick={() => handleSelectPoint(idx)}
+                          className={`p-2.5 cursor-pointer transition-all border-r border-[#DDD3C2] last:border-r-0 ${
+                            selectedPointIndex === idx ? 'bg-amber-50 font-black text-amber-900' : 'hover:bg-slate-50'
+                          }`}>
+                          <div className="font-mono text-[11px] text-slate-900"><MathInline math={pt.yLatex} /></div>
+                          <div className="text-[10px] text-slate-500 font-mono mt-0.5">{pt.approx}</div>
+                          <div className="mt-1">
+                            {idx < plottedCount ? (
+                              <span className="inline-flex items-center gap-0.5 text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                                <i className="fa-solid fa-check text-[8px]"></i> 已描
+                              </span>
+                            ) : (
+                              <span className="text-[9px] text-slate-400 font-medium">待描</span>
+                            )}
+                          </div>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+
+                  {/* Row Group 2: 3pi/4 to 2pi */}
+                  <thead>
+                    <tr className="bg-[#EAE3D5] text-slate-800 font-black border-b border-[#DDD3C2]">
+                      <th className="p-2.5 w-20 bg-[#E0D8C8] text-slate-900 border-r border-[#DDD3C2]">
+                        自變數 <MathInline math="x" />
+                      </th>
+                      {textbookSpecialPoints.slice(6, 13).map((pt, idx) => {
+                        const realIdx = idx + 6;
+                        return (
+                          <th 
+                            key={realIdx}
+                            onClick={() => handleSelectPoint(realIdx)}
+                            className={`p-2.5 cursor-pointer transition-all border-r border-[#DDD3C2] last:border-r-0 ${
+                              selectedPointIndex === realIdx ? 'bg-amber-100 text-amber-950 font-black ring-2 ring-amber-400 inset-0' : 'hover:bg-[#F4EADB]'
+                            }`}>
+                            <div className="font-mono text-[11px]"><MathInline math={pt.xLatex} /></div>
+                            <div className="text-[10px] text-slate-500 font-sans font-normal mt-0.5">{pt.deg}</div>
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  </thead>
+                  <tbody className="font-bold text-slate-700">
+                    <tr>
+                      <td className="p-2.5 bg-[#FAF7F2] font-black text-slate-900 border-r border-[#DDD3C2]">
+                        <MathInline math="y = \sin x" />
+                      </td>
+                      {textbookSpecialPoints.slice(6, 13).map((pt, idx) => {
+                        const realIdx = idx + 6;
+                        return (
+                          <td 
+                            key={realIdx}
+                            onClick={() => handleSelectPoint(realIdx)}
+                            className={`p-2.5 cursor-pointer transition-all border-r border-[#DDD3C2] last:border-r-0 ${
+                              selectedPointIndex === realIdx ? 'bg-amber-50 font-black text-amber-900' : 'hover:bg-slate-50'
+                            }`}>
+                            <div className="font-mono text-[11px] text-slate-900"><MathInline math={pt.yLatex} /></div>
+                            <div className="text-[10px] text-slate-500 font-mono mt-0.5">{pt.approx}</div>
+                            <div className="mt-1">
+                              {realIdx < plottedCount ? (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                                  <i className="fa-solid fa-check text-[8px]"></i> 已描
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-slate-400 font-medium">待描</span>
+                              )}
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pedagogical Note / Textbook Conclusion Box */}
+              <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-3 text-xs font-bold text-emerald-950 flex items-start gap-2.5">
+                <i className="fa-solid fa-circle-check text-emerald-600 mt-0.5 shrink-0 text-sm"></i>
+                <div className="leading-relaxed">
+                  <strong>課本關鍵結論（P.23）：</strong>
+                  利用計算機算出上表中 <MathInline math="x, y" /> 的近似值，再將點 <MathInline math="(x, y)" /> 逐一標示於坐標平面上。<strong>如果描點數夠多，並用平滑曲線將這些點連起來，就可得到 <MathInline math="y = \sin x" /> 在 <MathInline math="0 \le x \le 2\pi" /> 上的標準圖形！</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Five Key Points Pedagogical Table (速繪技巧) ── */}
             <div className="bg-[#FAF7F2] border border-[#DDD3C2] rounded-2xl p-5 shadow-xs">
-              <h4 className="font-black text-slate-800 text-sm mb-3 flex items-center gap-2">
-                <i className="fa-solid fa-table-cells text-nordic"></i>
-                課本核心：「五點作圖法」對照表 (0 ≤ x ≤ 2π)
-              </h4>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+                <h4 className="font-black text-slate-800 text-sm flex items-center gap-2">
+                  <i className="fa-solid fa-table-cells text-nordic"></i>
+                  課本速繪技巧：「五點作圖法」精要對照表 (0 ≤ x ≤ 2π)
+                </h4>
+                <span className="text-[11px] font-bold text-slate-500">
+                  掌握 13 點曲率後，日常解題快速草繪必備 5 個特徵點
+                </span>
+              </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-center border-collapse">
                   <thead>
                     <tr className="bg-[#EAE3D5] text-slate-800 font-black">
                       <th className="p-2.5 rounded-l-xl">變數 <MathInline math="x" /></th>
                       <th className="p-2.5"><MathInline math="0" /></th>
-                      <th className="p-2.5"><MathInline math="\frac{\pi}{2}" /></th>
-                      <th className="p-2.5"><MathInline math="\pi" /></th>
-                      <th className="p-2.5"><MathInline math="\frac{3\pi}{2}" /></th>
-                      <th className="p-2.5 rounded-r-xl"><MathInline math="2\pi" /></th>
+                      <th className="p-2.5"><MathInline math="\\frac{\\pi}{2}" /></th>
+                      <th className="p-2.5"><MathInline math="\\pi" /></th>
+                      <th className="p-2.5"><MathInline math="\\frac{3\\pi}{2}" /></th>
+                      <th className="p-2.5 rounded-r-xl"><MathInline math="2\\pi" /></th>
                     </tr>
                   </thead>
                   <tbody className="font-bold text-slate-700">
@@ -759,17 +1273,18 @@ unit2_code = r'''
                       <td className="p-2.5">360°</td>
                     </tr>
                     <tr>
-                      <td className="p-2.5 bg-[#FAF7F2] font-black text-slate-900"><MathInline math="y = \sin x" /></td>
-                      <td className="p-2.5 text-slate-900 font-black">0</td>
-                      <td className="p-2.5 text-emerald-700 font-black">1 (波峰)</td>
-                      <td className="p-2.5 text-slate-900 font-black">0</td>
-                      <td className="p-2.5 text-rose-700 font-black">-1 (波谷)</td>
-                      <td className="p-2.5 text-slate-900 font-black">0</td>
+                      <td className="p-2.5 bg-[#FAF7F2] font-black text-slate-900"><MathInline math="y = \\sin x" /></td>
+                      <td className="p-2.5 text-slate-900 font-black">0 (起點)</td>
+                      <td className="p-2.5 text-emerald-700 font-black">1 (波峰極大)</td>
+                      <td className="p-2.5 text-slate-900 font-black">0 (中間平衡點)</td>
+                      <td className="p-2.5 text-rose-700 font-black">-1 (波谷極小)</td>
+                      <td className="p-2.5 text-slate-900 font-black">0 (週期終點)</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+
 
             {/* 5 Core Properties & Physics Frequency Lesson Card */}
             <div className="mt-6 bg-[#FAF7F2] border border-[#DDD3C2] rounded-2xl p-6 shadow-xs space-y-6">
